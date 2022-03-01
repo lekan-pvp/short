@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"github.com/lekan-pvp/short/internal/config"
 	"github.com/lekan-pvp/short/internal/cookies"
 	"github.com/lekan-pvp/short/internal/makeshort"
 	"github.com/lekan-pvp/short/internal/memrepo"
@@ -38,6 +39,8 @@ func APIShorten(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Println(long)
+
 	short := makeshort.GenerateShortLink(long.URL, uuid)
 
 	record := memrepo.Storage{
@@ -54,8 +57,10 @@ func APIShorten(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	base := config.GetBaseURI()
+
 	result := memrepo.ResultResponse{
-		Result: short,
+		Result: base + "/" + short,
 	}
 
 	w.Header().Set("Content-Type", "application/json")
