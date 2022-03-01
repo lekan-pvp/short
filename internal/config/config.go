@@ -33,7 +33,7 @@ func New() {
 		flag.StringVar(&serverAddress, "a", config.ServerAddress, "адрес и порт запуска сервиса")
 		flag.StringVar(&databaseDSN, "d", config.DatabaseDSN, "URI подключения к БД")
 		flag.StringVar(&fileStoragePath, "f", config.FileStoragePath, "file storage")
-		flag.StringVar(&baseURL, "u", config.BaseURL, "Base URL")
+		flag.StringVar(&baseURL, "b", config.BaseURL, "Base URL")
 
 		flag.Parse()
 
