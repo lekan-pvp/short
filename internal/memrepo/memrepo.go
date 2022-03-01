@@ -18,6 +18,14 @@ type Storage struct {
 	DeleteFlag    bool   `json:"delete_flag"`
 }
 
+type URL struct {
+	URL string `json:"url"`
+}
+
+type ResultResponse struct {
+	Result string `json:"result"`
+}
+
 var urls []Storage
 var filePath string
 
