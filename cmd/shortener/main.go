@@ -26,9 +26,9 @@ func main() {
 
 	router.Use(middleware.Logger)
 
-	router.With(mware.GzipHandle).Post("/", handlers.PostURL)
+	router.With(mware.RequestHandle, mware.GzipHandle).Post("/", handlers.PostURL)
 	router.With(mware.GzipHandle).Post("/{short}", handlers.GetShort)
-	router.With(mware.GzipHandle).Post("/api/shorten", handlers.APIShorten)
+	router.With(mware.RequestHandle, mware.GzipHandle).Post("/api/shorten", handlers.APIShorten)
 
 	err = http.ListenAndServe(serverAddress, router)
 	if err != nil {
