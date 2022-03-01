@@ -58,10 +58,12 @@ func APIShorten(w http.ResponseWriter, r *http.Request) {
 		Result: short,
 	}
 
+	w.Header().Add("Content-Type", "application/json")
+	
 	if err := json.NewEncoder(w).Encode(&result); err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(200)
+
+	w.WriteHeader(201)
 }
