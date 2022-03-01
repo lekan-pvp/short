@@ -27,7 +27,7 @@ func main() {
 
 	router.Post("/", handlers.PostURL)
 	router.Get("/{short}", handlers.GetShort)
-	router.Post("api/shorten", handlers.APIShorten)
+	router.Post("/api/shorten", handlers.APIShorten)
 
 	err = http.ListenAndServe(serverAddress, router)
 	if err != nil {
