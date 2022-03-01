@@ -6,6 +6,7 @@ import (
 	"github.com/lekan-pvp/short/internal/config"
 	"github.com/lekan-pvp/short/internal/handlers"
 	"github.com/lekan-pvp/short/internal/memrepo"
+	"github.com/lekan-pvp/short/internal/mware"
 	"log"
 	"net/http"
 )
@@ -26,8 +27,8 @@ func main() {
 	router.Use(middleware.Logger)
 
 	router.Post("/", handlers.PostURL)
-	router.Get("/{short}", handlers.GetShort)
-	router.Post("/api/shorten", handlers.APIShorten)
+	router.With(mware.GzipHandle).Post("/{short}", handlers.GetShort)
+	router.With(mware.GzipHandle).Post("/api/shorten", handlers.APIShorten)
 
 	err = http.ListenAndServe(serverAddress, router)
 	if err != nil {
