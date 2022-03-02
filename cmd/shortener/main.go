@@ -28,8 +28,6 @@ func main() {
 		}
 	}
 
-	dbrepo.New()
-
 	router := chi.NewRouter()
 
 	router.Use(middleware.Logger)
