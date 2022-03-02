@@ -5,7 +5,8 @@ import (
 	"github.com/go-chi/chi/middleware"
 	"github.com/lekan-pvp/short/internal/config"
 	"github.com/lekan-pvp/short/internal/dbrepo"
-	"github.com/lekan-pvp/short/internal/handlers"
+	"github.com/lekan-pvp/short/internal/handlers/dbhandlers"
+	"github.com/lekan-pvp/short/internal/handlers/memhandlers"
 	"github.com/lekan-pvp/short/internal/memrepo"
 	"github.com/lekan-pvp/short/internal/mware"
 
@@ -26,17 +27,17 @@ func main() {
 
 	if dbDSN != "" {
 		dbrepo.New()
-		router.Get("/ping", handlers.Ping)
+		router.Get("/ping", dbhandlers.Ping)
+		router.Post("/", dbhandlers.PostURL)
+		router.Get("/{short}", dbhandlers.GetShort)
+		router.Post("/api/shorten", dbhandlers.APIShorten)
+		router.Get("/api/user/urls", dbhandlers.GetURLS)
 	} else {
-		err := memrepo.New()
-		if err != nil {
-			log.Println("Error initialization memrepo")
-			panic(err)
-		}
-		router.With(mware.RequestHandle, mware.GzipHandle).Post("/", handlers.PostURL)
-		router.With(mware.GzipHandle).Get("/{short}", handlers.GetShort)
-		router.With(mware.RequestHandle, mware.GzipHandle).Post("/api/shorten", handlers.APIShorten)
-		router.Get("/api/user/urls", handlers.GetURLS)
+		memrepo.New()
+		router.With(mware.RequestHandle, mware.GzipHandle).Post("/", memhandlers.PostURL)
+		router.With(mware.GzipHandle).Get("/{short}", memhandlers.GetShort)
+		router.With(mware.RequestHandle, mware.GzipHandle).Post("/api/shorten", memhandlers.APIShorten)
+		router.Get("/api/user/urls", memhandlers.GetURLS)
 	}
 
 	err := http.ListenAndServe(serverAddress, router)

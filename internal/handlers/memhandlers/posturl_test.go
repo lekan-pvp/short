@@ -1,4 +1,4 @@
-package handlers
+package memhandlers
 
 import (
 	"net/http"

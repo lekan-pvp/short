@@ -1,7 +1,6 @@
 package memrepo
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
 	"github.com/lekan-pvp/short/internal/config"
@@ -29,19 +28,19 @@ type ResultResponse struct {
 var urls []Storage
 var filePath string
 
-func New() error {
+func New() {
 	var err error
 	filePath = config.GetFilePath()
 	f, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
 	defer f.Close()
 	if err != nil {
 		log.Println("open file error", err)
-		return err
+		panic(err)
 	}
 
 	if _, err := f.Seek(0, 0); err != nil {
 		log.Fatalln("cant find file")
-		return err
+		panic(err)
 	}
 	d := json.NewDecoder(f)
 	for err == nil {
@@ -51,12 +50,11 @@ func New() error {
 		}
 	}
 	if err == io.EOF {
-		return nil
+		return
 	}
-	return err
 }
 
-func PostURL(ctx context.Context, url Storage) error {
+func PostURL(url Storage) error {
 	f, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
 	defer f.Close()
 	if err != nil {
@@ -68,7 +66,7 @@ func PostURL(ctx context.Context, url Storage) error {
 	return json.NewEncoder(f).Encode(&url)
 }
 
-func GetOriginal(ctx context.Context, short string) (string, error) {
+func GetOriginal(short string) (string, error) {
 	var url string
 	for _, v := range urls {
 		if v.ShortURL == short {
@@ -84,9 +82,14 @@ type ListResponse struct {
 	OriginalURL string `json:"original_url"`
 }
 
-func GetURLsList(ctx context.Context, uuid string) []ListResponse {
+func GetURLsList(uuid string) ([]ListResponse, error) {
 	base := config.GetBaseURL()
 	var list []ListResponse
+
+	if len(urls) == 0 {
+		return nil, errors.New("not found")
+	}
+
 	for _, v := range urls {
 		if v.UUID == uuid {
 			list = append(list, ListResponse{
@@ -95,5 +98,5 @@ func GetURLsList(ctx context.Context, uuid string) []ListResponse {
 			})
 		}
 	}
-	return list
+	return list, nil
 }

@@ -8,6 +8,14 @@ import (
 	"log"
 )
 
+type Storage struct {
+	UUID          string `json:"uuid" db:"user_id"`
+	ShortURL      string `json:"short_url" db:"short_url"`
+	OriginalURL   string `json:"original_url" db:"orig_url"`
+	CorrelationID string `json:"correlation_id" db:"correlation_id"`
+	DeleteFlag    bool   `json:"delete_flag" db:"is_deleted"`
+}
+
 var db *sql.DB
 
 func New() {
@@ -33,4 +41,64 @@ func Ping(ctx context.Context) error {
 		return err
 	}
 	return nil
+}
+
+func PostURL(ctx context.Context, rec Storage) error {
+	log.Println("IN InsertUserRepo short url =", rec.ShortURL)
+	_, err := db.ExecContext(ctx, `INSERT INTO users(user_id, short_url, orig_url) VALUES ($1, $2, $3);`, rec.UUID, rec.ShortURL, rec.OriginalURL)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+type OriginURL struct {
+	URL     string
+	Deleted bool
+}
+
+func (u OriginURL) IsDeleted() bool {
+	return u.Deleted
+}
+
+func GetOriginal(ctx context.Context, short string) (*OriginURL, error) {
+	result := &OriginURL{}
+
+	err := db.QueryRowContext(ctx, `SELECT orig_url, is_deleted FROM users WHERE short_url=$1;`, short).Scan(result.URL, result.Deleted)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+type ListResponse struct {
+	ShortURL    string `json:"short_url"`
+	OriginalURL string `json:"original_url"`
+}
+
+func GetURLsList(ctx context.Context, uuid string) ([]ListResponse, error) {
+	var list []ListResponse
+
+	rows, err := db.QueryContext(ctx, `SELECT short_url, orig_url FROM users WHERE user_id=$1`, uuid)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var v ListResponse
+		err = rows.Scan(&v.ShortURL, &v.OriginalURL)
+		if err != nil {
+			return nil, err
+		}
+		list = append(list, v)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+	return list, nil
 }

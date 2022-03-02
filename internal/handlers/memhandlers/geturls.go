@@ -1,7 +1,6 @@
-package handlers
+package memhandlers
 
 import (
-	"context"
 	"encoding/json"
 	"github.com/lekan-pvp/short/internal/cookies"
 	"github.com/lekan-pvp/short/internal/memrepo"
@@ -27,12 +26,14 @@ func GetURLS(w http.ResponseWriter, r *http.Request) {
 
 	uuid := values[0]
 
-	ctx, stop := context.WithCancel(r.Context())
-	defer stop()
-
 	var list []memrepo.ListResponse
 
-	list = memrepo.GetURLsList(ctx, uuid)
+	list, err = memrepo.GetURLsList(uuid)
+	if err != nil {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+	
 	if list == nil {
 		w.WriteHeader(http.StatusNoContent)
 		return

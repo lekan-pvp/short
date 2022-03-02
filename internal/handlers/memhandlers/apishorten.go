@@ -1,7 +1,6 @@
-package handlers
+package memhandlers
 
 import (
-	"context"
 	"encoding/json"
 	"github.com/lekan-pvp/short/internal/config"
 	"github.com/lekan-pvp/short/internal/cookies"
@@ -13,9 +12,6 @@ import (
 )
 
 func APIShorten(w http.ResponseWriter, r *http.Request) {
-	ctx, stop := context.WithCancel(r.Context())
-	defer stop()
-
 	cookie, err := r.Cookie("token")
 	if err != nil || !cookies.CheckCookie(cookie) {
 		cookie = cookies.CreateCookie()
@@ -51,7 +47,7 @@ func APIShorten(w http.ResponseWriter, r *http.Request) {
 		DeleteFlag:    false,
 	}
 
-	err = memrepo.PostURL(ctx, record)
+	err = memrepo.PostURL(record)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return

@@ -1,7 +1,6 @@
-package handlers
+package memhandlers
 
 import (
-	"context"
 	"github.com/lekan-pvp/short/internal/config"
 	"github.com/lekan-pvp/short/internal/cookies"
 	"github.com/lekan-pvp/short/internal/makeshort"
@@ -43,16 +42,13 @@ func PostURL(w http.ResponseWriter, r *http.Request) {
 	url := string(body)
 	short := makeshort.GenerateShortLink(url, uuid)
 
-	ctx, stop := context.WithCancel(r.Context())
-	defer stop()
-
 	record := memrepo.Storage{
 		UUID:        uuid,
 		ShortURL:    short,
 		OriginalURL: url,
 	}
 
-	err = memrepo.PostURL(ctx, record)
+	err = memrepo.PostURL(record)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
