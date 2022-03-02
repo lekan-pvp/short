@@ -33,7 +33,7 @@ func APIShorten(w http.ResponseWriter, r *http.Request) {
 
 	uuid := values[0]
 
-	long := &memrepo.URL{}
+	long := &dbrepo.URL{}
 
 	if err := json.NewDecoder(r.Body).Decode(long); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

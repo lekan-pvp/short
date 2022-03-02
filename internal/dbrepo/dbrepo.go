@@ -17,6 +17,10 @@ type Storage struct {
 	DeleteFlag    bool   `json:"delete_flag" db:"is_deleted"`
 }
 
+type URL struct {
+	URL string `json:"url"`
+}
+
 var db *sql.DB
 
 func New() {
