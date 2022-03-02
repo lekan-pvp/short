@@ -20,6 +20,7 @@ func GetShort(w http.ResponseWriter, r *http.Request) {
 
 	origin, err := dbrepo.GetOriginal(ctx, short)
 	if err != nil {
+		log.Printf("error GetOriginal %s", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
