@@ -57,7 +57,7 @@ func APIShorten(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	base := config.GetBaseURI()
+	base := config.GetBaseURL()
 
 	result := memrepo.ResultResponse{
 		Result: base + "/" + short,

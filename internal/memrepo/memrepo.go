@@ -85,11 +85,12 @@ type ListResponse struct {
 }
 
 func GetURLsList(ctx context.Context, uuid string) []ListResponse {
+	base := config.GetBaseURL()
 	var list []ListResponse
 	for _, v := range urls {
 		if v.UUID == uuid {
 			list = append(list, ListResponse{
-				ShortURL:    v.ShortURL,
+				ShortURL:    base + v.ShortURL,
 				OriginalURL: v.OriginalURL,
 			})
 		}
