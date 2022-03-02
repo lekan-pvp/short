@@ -4,6 +4,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/lekan-pvp/short/internal/config"
+	"github.com/lekan-pvp/short/internal/dbrepo"
 	"github.com/lekan-pvp/short/internal/handlers"
 	"github.com/lekan-pvp/short/internal/memrepo"
 	"github.com/lekan-pvp/short/internal/mware"
@@ -22,6 +23,8 @@ func main() {
 
 	serverAddress := config.GetServerAddress()
 
+	dbrepo.New()
+
 	router := chi.NewRouter()
 
 	router.Use(middleware.Logger)
@@ -30,6 +33,7 @@ func main() {
 	router.With(mware.GzipHandle).Get("/{short}", handlers.GetShort)
 	router.With(mware.RequestHandle, mware.GzipHandle).Post("/api/shorten", handlers.APIShorten)
 	router.Get("/api/user/urls", handlers.GetURLS)
+	router.Get("/ping", handlers.Ping)
 
 	err = http.ListenAndServe(serverAddress, router)
 	if err != nil {
