@@ -3,11 +3,13 @@ package dbhandlers
 import (
 	"context"
 	"encoding/json"
+	"github.com/jackc/pgerrcode"
 	"github.com/lekan-pvp/short/internal/config"
 	"github.com/lekan-pvp/short/internal/cookies"
 	"github.com/lekan-pvp/short/internal/dbrepo"
 	"github.com/lekan-pvp/short/internal/makeshort"
 	"github.com/lekan-pvp/short/internal/memrepo"
+	"github.com/lib/pq"
 	"log"
 	"net/http"
 	"strings"
@@ -52,10 +54,17 @@ func APIShorten(w http.ResponseWriter, r *http.Request) {
 		DeleteFlag:    false,
 	}
 
-	err = dbrepo.PostURL(ctx, record)
+	status := http.StatusCreated
+
+	short, err = dbrepo.PostURL(ctx, record)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
+		if err.(*pq.Error).Code == pgerrcode.UniqueViolation {
+			status = http.StatusConflict
+		} else {
+			log.Println("error insert in DB:", err)
+			http.Error(w, err.Error(), 500)
+			return
+		}
 	}
 
 	base := config.GetBaseURL()
@@ -65,7 +74,7 @@ func APIShorten(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(201)
+	w.WriteHeader(status)
 
 	if err := json.NewEncoder(w).Encode(&result); err != nil {
 		http.Error(w, err.Error(), 500)
