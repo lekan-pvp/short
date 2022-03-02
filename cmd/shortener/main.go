@@ -29,6 +29,7 @@ func main() {
 	router.With(mware.RequestHandle, mware.GzipHandle).Post("/", handlers.PostURL)
 	router.With(mware.GzipHandle).Get("/{short}", handlers.GetShort)
 	router.With(mware.RequestHandle, mware.GzipHandle).Post("/api/shorten", handlers.APIShorten)
+	router.Get("/api/user/urls", handlers.GetURLS)
 
 	err = http.ListenAndServe(serverAddress, router)
 	if err != nil {

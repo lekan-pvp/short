@@ -78,3 +78,21 @@ func GetOriginal(ctx context.Context, short string) (string, error) {
 	}
 	return "", errors.New("URL not found")
 }
+
+type ListResponse struct {
+	ShortURL    string `json:"short_url"`
+	OriginalURL string `json:"original_url"`
+}
+
+func GetURLsList(ctx context.Context, uuid string) []ListResponse {
+	var list []ListResponse
+	for _, v := range urls {
+		if v.UUID == uuid {
+			list = append(list, ListResponse{
+				ShortURL:    v.ShortURL,
+				OriginalURL: v.OriginalURL,
+			})
+		}
+	}
+	return list
+}
