@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-chi/chi"
 	"github.com/lekan-pvp/short/internal/dbrepo"
+	"log"
 	"net/http"
 )
 
@@ -22,6 +23,8 @@ func GetShort(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	log.Println(origin.URL)
 
 	w.Header().Set("Content-Type", "text/plain")
 	w.Header().Set("Location", origin.URL)
