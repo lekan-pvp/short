@@ -23,21 +23,7 @@ func GetShort(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if origin.URL == "" {
-		http.NotFound(w, r)
-		return
-	}
-
-	if !origin.IsDeleted() {
-		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-		w.Header().Set("Location", origin.URL)
-		w.WriteHeader(http.StatusTemporaryRedirect)
-		return
-	}
-
-	if origin.IsDeleted() {
-		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-		w.WriteHeader(410)
-		return
-	}
+	w.Header().Set("Content-Type", "text/plain")
+	w.Header().Set("Location", origin.URL)
+	w.WriteHeader(http.StatusTemporaryRedirect)
 }
