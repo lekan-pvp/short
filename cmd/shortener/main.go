@@ -15,13 +15,18 @@ import (
 func main() {
 	config.New()
 
-	err := memrepo.New()
-	if err != nil {
-		log.Println("Error initialization memrepo")
-		panic(err)
-	}
-
 	serverAddress := config.GetServerAddress()
+
+	dbDSN := config.GetDatabaseURI()
+	if dbDSN == "user=postgres password='postgres' dbname=pqgotest sslmode=disable" {
+		dbrepo.New()
+	} else {
+		err := memrepo.New()
+		if err != nil {
+			log.Println("Error initialization memrepo")
+			panic(err)
+		}
+	}
 
 	dbrepo.New()
 
@@ -35,7 +40,7 @@ func main() {
 	router.With(mware.RequestHandle, mware.GzipHandle).Post("/api/shorten", handlers.APIShorten)
 	router.Get("/api/user/urls", handlers.GetURLS)
 
-	err = http.ListenAndServe(serverAddress, router)
+	err := http.ListenAndServe(serverAddress, router)
 	if err != nil {
 		log.Println("server error", err)
 		panic(err)
