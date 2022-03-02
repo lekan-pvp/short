@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"github.com/lekan-pvp/short/internal/config"
+	"github.com/lekan-pvp/short/internal/makeshort"
 	_ "github.com/lib/pq"
 	"log"
 )
@@ -101,4 +102,46 @@ func GetURLsList(ctx context.Context, uuid string) ([]ListResponse, error) {
 		return nil, err
 	}
 	return list, nil
+}
+
+type BatchResponse struct {
+	CorrelationID string `json:"correlation_id"`
+	ShortURL      string `json:"short_url"`
+}
+
+type BatchRequest struct {
+	CorrelationID string `json:"correlation_id"`
+	OriginalURL   string `json:"original_url"`
+}
+
+func BatchShorten(ctx context.Context, uuid string, in []BatchRequest) ([]BatchResponse, error) {
+	var res []BatchResponse
+	base := config.GetBaseURL()
+
+	tx, err := db.Begin()
+	if err != nil {
+		return nil, err
+	}
+
+	defer tx.Rollback()
+
+	stmt, err := tx.PrepareContext(ctx, `INSERT INTO users(user_id, short_url, orig_url, correlation_id) 
+												VALUES($1, $2, $3, $4)`)
+	if err != nil {
+		return nil, err
+	}
+
+	defer stmt.Close()
+
+	for _, v := range in {
+		short := makeshort.GenerateShortLink(v.OriginalURL, v.CorrelationID)
+		if _, err = stmt.ExecContext(ctx, uuid, short, v.OriginalURL, v.CorrelationID); err != nil {
+			return nil, err
+		}
+		res = append(res, BatchResponse{CorrelationID: v.CorrelationID, ShortURL: base + "/" + short})
+	}
+	if err := tx.Commit(); err != nil {
+		return nil, err
+	}
+	return res, nil
 }
