@@ -15,7 +15,7 @@ func PostBatch(w http.ResponseWriter, r *http.Request) {
 
 	var uuid string
 
-	in := make([]dbrepo.BatchRequest, 0)
+	var in []dbrepo.BatchRequest
 
 	cookie, err := r.Cookie("token")
 	if err != nil || !cookies.CheckCookie(cookie) {
