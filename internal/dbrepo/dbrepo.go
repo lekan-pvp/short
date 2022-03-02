@@ -122,6 +122,8 @@ func BatchShorten(ctx context.Context, uuid string, in []BatchRequest) ([]BatchR
 	var res []BatchResponse
 	base := config.GetBaseURL()
 
+	log.Printf("in is %v", in)
+
 	tx, err := db.Begin()
 	if err != nil {
 		return nil, err
