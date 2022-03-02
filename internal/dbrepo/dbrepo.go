@@ -71,7 +71,7 @@ func (u OriginURL) IsDeleted() bool {
 func GetOriginal(ctx context.Context, short string) (*OriginURL, error) {
 	result := &OriginURL{}
 
-	err := db.QueryRowContext(ctx, `SELECT orig_url, is_deleted FROM users WHERE short_url=$1;`, short).Scan(result.URL, result.Deleted)
+	err := db.QueryRowContext(ctx, `SELECT orig_url, is_deleted FROM users WHERE short_url=$1;`, short).Scan(&result.URL, &result.Deleted)
 	if err != nil {
 		return nil, err
 	}
