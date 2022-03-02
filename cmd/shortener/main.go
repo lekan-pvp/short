@@ -30,9 +30,11 @@ func main() {
 		router.Get("/ping", dbhandlers.Ping)
 		router.Post("/", dbhandlers.PostURL)
 		router.Get("/{short}", dbhandlers.GetShort)
-		router.Post("/api/shorten", dbhandlers.APIShorten)
+		router.Route("/api/shorten", func(r chi.Router) {
+			r.Post("/", dbhandlers.APIShorten)
+			r.Post("/batch", dbhandlers.PostBatch)
+		})
 		router.Get("/api/user/urls", dbhandlers.GetURLS)
-		router.Post("/api/shorten/batch", dbhandlers.PostBatch)
 	} else {
 		memrepo.New()
 		router.With(mware.RequestHandle, mware.GzipHandle).Post("/", memhandlers.PostURL)
