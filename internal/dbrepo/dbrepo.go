@@ -141,6 +141,7 @@ func BatchShorten(ctx context.Context, uuid string, in []BatchRequest) ([]BatchR
 
 	for _, v := range in {
 		short := makeshort.GenerateShortLink(v.OriginalURL, v.CorrelationID)
+		log.Printf("short is %s", short)
 		if _, err = stmt.ExecContext(ctx, uuid, short, v.OriginalURL, v.CorrelationID); err != nil {
 			return nil, err
 		}
