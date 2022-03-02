@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"github.com/lekan-pvp/short/internal/config"
+	_ "github.com/lib/pq"
 	"log"
 )
 
