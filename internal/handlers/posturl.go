@@ -27,7 +27,7 @@ func PostURL(w http.ResponseWriter, r *http.Request) {
 	values := strings.Split(cookie.Value, ":")
 	if len(values) != 2 {
 		log.Println("Unauthorized")
-		http.Error(w, "Unauthorized", 401)
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
@@ -36,7 +36,7 @@ func PostURL(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	r.Body.Close()
 	if err != nil {
-		http.Error(w, err.Error(), 400)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -54,13 +54,13 @@ func PostURL(w http.ResponseWriter, r *http.Request) {
 
 	err = memrepo.PostURL(ctx, record)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	baseURL := config.GetBaseURI()
 
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	w.WriteHeader(201)
+	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(baseURL + "/" + short))
 }

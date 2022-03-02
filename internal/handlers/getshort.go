@@ -13,17 +13,17 @@ func GetShort(w http.ResponseWriter, r *http.Request) {
 
 	short := chi.URLParam(r, "short")
 	if short == "" {
-		http.Error(w, "url is empty", 404)
+		http.Error(w, "url is empty", http.StatusNotFound)
 		return
 	}
 
 	url, err := memrepo.GetOriginal(ctx, short)
 	if err != nil {
-		http.Error(w, err.Error(), 400)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	w.Header().Set("Content-Type", "text/plain")
 	w.Header().Set("Location", url)
-	w.WriteHeader(307)
+	w.WriteHeader(http.StatusTemporaryRedirect)
 }

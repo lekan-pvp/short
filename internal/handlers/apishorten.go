@@ -26,7 +26,7 @@ func APIShorten(w http.ResponseWriter, r *http.Request) {
 	values := strings.Split(cookie.Value, ":")
 	if len(values) != 2 {
 		log.Println("Unauthorized")
-		http.Error(w, "Unauthorized", 401)
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
@@ -35,7 +35,7 @@ func APIShorten(w http.ResponseWriter, r *http.Request) {
 	long := &memrepo.URL{}
 
 	if err := json.NewDecoder(r.Body).Decode(long); err != nil {
-		w.WriteHeader(404)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
