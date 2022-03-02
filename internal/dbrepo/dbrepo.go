@@ -15,6 +15,7 @@ func New() {
 	databaseDSN := config.GetDatabaseURI()
 	db, err = sql.Open("postgres", databaseDSN)
 	if err != nil {
+		log.Printf("dtatbase connecting error %s", err)
 		log.Fatal("database connecting error", err)
 	}
 
