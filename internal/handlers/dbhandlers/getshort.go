@@ -23,7 +23,7 @@ func GetShort(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if origin == nil {
+	if origin.URL == "" {
 		http.NotFound(w, r)
 		return
 	}
