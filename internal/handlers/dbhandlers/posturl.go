@@ -54,7 +54,7 @@ func PostURL(w http.ResponseWriter, r *http.Request) {
 		OriginalURL: url,
 	}
 
-	err = dbrepo.PostURL(ctx, record)
+	short, err = dbrepo.PostURL(ctx, record)
 	if err != nil {
 		if err.(*pq.Error).Code == pgerrcode.UniqueViolation {
 			http.Error(w, err.Error(), http.StatusConflict)

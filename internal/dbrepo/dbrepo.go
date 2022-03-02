@@ -3,8 +3,10 @@ package dbrepo
 import (
 	"context"
 	"database/sql"
+	"github.com/jackc/pgerrcode"
 	"github.com/lekan-pvp/short/internal/config"
 	"github.com/lekan-pvp/short/internal/makeshort"
+	"github.com/lib/pq"
 	_ "github.com/lib/pq"
 	"log"
 )
@@ -48,15 +50,23 @@ func Ping(ctx context.Context) error {
 	return nil
 }
 
-func PostURL(ctx context.Context, rec Storage) error {
+func PostURL(ctx context.Context, rec Storage) (string, error) {
 	log.Println("IN InsertUserRepo short url =", rec.ShortURL)
 	_, err := db.ExecContext(ctx, `INSERT INTO users(user_id, short_url, orig_url) VALUES ($1, $2, $3);`, rec.UUID, rec.ShortURL, rec.OriginalURL)
 
+	var result string
+
 	if err != nil {
-		return err
+		if err.(*pq.Error).Code == pgerrcode.UniqueViolation {
+			notOk := db.QueryRowContext(ctx, `SELECT short_url FROM users WHERE orig_url=$1;`, rec.OriginalURL).Scan(&result)
+			if notOk != nil {
+				return "", notOk
+			}
+			return result, err
+		}
 	}
 
-	return nil
+	return result, nil
 }
 
 type OriginURL struct {
