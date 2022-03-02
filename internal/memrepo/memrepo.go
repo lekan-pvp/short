@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/lekan-pvp/short/internal/config"
+	"github.com/lekan-pvp/short/internal/makeshort"
 	"io"
 	"log"
 	"os"
@@ -99,4 +100,25 @@ func GetURLsList(uuid string) ([]ListResponse, error) {
 		}
 	}
 	return list, nil
+}
+
+type BatchResponse struct {
+	CorrelationID string `json:"correlation_id"`
+	ShortURL      string `json:"short_url"`
+}
+
+type BatchRequest struct {
+	CorrelationID string `json:"correlation_id"`
+	OriginalURL   string `json:"original_url"`
+}
+
+func BatchShorten(uuid string, in []BatchRequest) ([]BatchResponse, error) {
+	base := config.GetBaseURL()
+	var res []BatchResponse
+	for _, v := range in {
+		short := makeshort.GenerateShortLink(v.OriginalURL, v.CorrelationID)
+		res = append(res, BatchResponse{CorrelationID: v.CorrelationID, ShortURL: base + "/" + short})
+		urls = append(urls, Storage{UUID: uuid, ShortURL: short, OriginalURL: v.OriginalURL, CorrelationID: v.CorrelationID})
+	}
+	return res, nil
 }

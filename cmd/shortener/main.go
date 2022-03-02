@@ -39,6 +39,7 @@ func main() {
 		router.With(mware.GzipHandle).Get("/{short}", memhandlers.GetShort)
 		router.With(mware.RequestHandle, mware.GzipHandle).Post("/api/shorten", memhandlers.APIShorten)
 		router.Get("/api/user/urls", memhandlers.GetURLS)
+		router.Post("/api/shorten/batch", memhandlers.PostBatch)
 	}
 
 	err := http.ListenAndServe(serverAddress, router)
