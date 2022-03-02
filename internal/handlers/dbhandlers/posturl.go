@@ -54,19 +54,22 @@ func PostURL(w http.ResponseWriter, r *http.Request) {
 		OriginalURL: url,
 	}
 
+	status := http.StatusCreated
+
 	short, err = dbrepo.PostURL(ctx, record)
 	if err != nil {
 		if err.(*pq.Error).Code == pgerrcode.UniqueViolation {
-			http.Error(w, err.Error(), http.StatusConflict)
+			status = http.StatusConflict
+		} else {
+			log.Println("error insert in DB:", err)
+			http.Error(w, err.Error(), 500)
 			return
 		}
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
 	}
 
 	baseURL := config.GetBaseURL()
 
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(status)
 	w.Write([]byte(baseURL + "/" + short))
 }
