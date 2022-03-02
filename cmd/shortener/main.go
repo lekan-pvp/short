@@ -27,7 +27,7 @@ func main() {
 
 	if dbDSN != "" {
 		dbrepo.New()
-		router.Get("/ping", dbhandlers.Ping)
+		router.With(mware.Ping).Get("/ping", dbhandlers.Ping)
 		router.Post("/", dbhandlers.PostURL)
 		router.Get("/{short}", dbhandlers.GetShort)
 		router.Route("/api/shorten", func(r chi.Router) {
