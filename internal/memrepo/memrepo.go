@@ -90,7 +90,7 @@ func GetURLsList(ctx context.Context, uuid string) []ListResponse {
 	for _, v := range urls {
 		if v.UUID == uuid {
 			list = append(list, ListResponse{
-				ShortURL:    base + v.ShortURL,
+				ShortURL:    base + "/" + v.ShortURL,
 				OriginalURL: v.OriginalURL,
 			})
 		}
