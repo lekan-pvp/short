@@ -18,7 +18,7 @@ func main() {
 	serverAddress := config.GetServerAddress()
 
 	dbDSN := config.GetDatabaseURI()
-	if dbDSN != "user=postgres password='postgres' dbname=pqgotest sslmode=disable" {
+	if dbDSN != "" {
 		dbrepo.New()
 	} else {
 		err := memrepo.New()
