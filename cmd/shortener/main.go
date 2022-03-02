@@ -28,10 +28,10 @@ func main() {
 	if dbDSN != "" {
 		dbrepo.New()
 		router.Get("/ping", dbhandlers.Ping)
-		router.Post("/", dbhandlers.PostURL)
-		router.Get("/{short}", dbhandlers.GetShort)
-		router.Post("/api/shorten", dbhandlers.APIShorten)
-		router.Get("/api/user/urls", dbhandlers.GetURLS)
+		//router.Post("/", dbhandlers.PostURL)
+		//router.Get("/{short}", dbhandlers.GetShort)
+		//router.Post("/api/shorten", dbhandlers.APIShorten)
+		//router.Get("/api/user/urls", dbhandlers.GetURLS)
 	} else {
 		memrepo.New()
 		router.With(mware.RequestHandle, mware.GzipHandle).Post("/", memhandlers.PostURL)
