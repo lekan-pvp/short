@@ -140,14 +140,17 @@ func BatchShorten(ctx context.Context, uuid string, in []BatchRequest) ([]BatchR
 	defer stmt.Close()
 
 	for _, v := range in {
+		log.Printf("%s %s", v.OriginalURL, v.CorrelationID)
 		short := makeshort.GenerateShortLink(v.OriginalURL, v.CorrelationID)
 		log.Printf("short is %s", short)
 		if _, err = stmt.ExecContext(ctx, uuid, short, v.OriginalURL, v.CorrelationID); err != nil {
+			log.Println("insert exec error")
 			return nil, err
 		}
 		res = append(res, BatchResponse{CorrelationID: v.CorrelationID, ShortURL: base + "/" + short})
 	}
 	if err := tx.Commit(); err != nil {
+		log.Println("commit error")
 		return nil, err
 	}
 	return res, nil
