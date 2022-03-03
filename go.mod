@@ -9,4 +9,5 @@ require (
 	github.com/itchyny/base58-go v0.2.0 // indirect
 	github.com/jackc/pgerrcode v0.0.0-20201024163028-a0d42d470451 // indirect
 	github.com/lib/pq v1.10.4 // indirect
+	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 )
