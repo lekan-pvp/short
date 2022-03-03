@@ -209,6 +209,7 @@ func SoftDelete(ctx context.Context, in []string) error {
 
 	stmt, err := tx.PrepareContext(ctx, `UPDATE users SET is_deleted=TRUE WHERE short_url=$1`)
 	if err != nil {
+		log.Println("stmt error")
 		return err
 	}
 	defer stmt.Close()
@@ -221,6 +222,7 @@ func SoftDelete(ctx context.Context, in []string) error {
 		g.Go(func() error {
 			err = newWorker(ctx, stmt, tx, jobs)
 			if err != nil {
+				log.Println("error in g.Go")
 				return err
 			}
 			return nil
@@ -233,10 +235,13 @@ func SoftDelete(ctx context.Context, in []string) error {
 	close(jobs)
 
 	if err := g.Wait(); err != nil {
+		log.Println("Wait error")
 		return err
 	}
 
 	if err = tx.Commit(); err != nil {
+		log.Println("Commit error")
+
 		return err
 	}
 
