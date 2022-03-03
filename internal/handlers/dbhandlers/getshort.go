@@ -32,6 +32,7 @@ func GetShort(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !origin.IsDeleted() {
+		log.Println("NOT DELETED")
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 		w.Header().Set("Location", origin.URL)
 		w.WriteHeader(http.StatusTemporaryRedirect)
@@ -39,6 +40,7 @@ func GetShort(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if origin.IsDeleted() {
+		log.Println("DELETED")
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 		w.WriteHeader(http.StatusGone)
 		return
