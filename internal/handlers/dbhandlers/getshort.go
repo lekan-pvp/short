@@ -26,6 +26,7 @@ func GetShort(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if origin == nil {
+		log.Println("Not found")
 		http.NotFound(w, r)
 		return
 	}
@@ -39,7 +40,7 @@ func GetShort(w http.ResponseWriter, r *http.Request) {
 
 	if origin.IsDeleted() {
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-		w.WriteHeader(410)
+		w.WriteHeader(http.StatusGone)
 		return
 	}
 }
