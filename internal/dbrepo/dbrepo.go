@@ -3,11 +3,13 @@ package dbrepo
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"github.com/jackc/pgerrcode"
 	"github.com/lekan-pvp/short/internal/config"
 	"github.com/lekan-pvp/short/internal/makeshort"
 	"github.com/lib/pq"
 	_ "github.com/lib/pq"
+	"golang.org/x/sync/errgroup"
 	"log"
 )
 
@@ -164,4 +166,79 @@ func BatchShorten(ctx context.Context, uuid string, in []BatchRequest) ([]BatchR
 		return nil, err
 	}
 	return res, nil
+}
+
+func fanOut(input []string, n int) []chan string {
+	chs := make([]chan string, 0, n)
+	for i, val := range input {
+		ch := make(chan string, 1)
+		ch <- val
+		chs = append(chs, ch)
+		close(chs[i])
+	}
+	return chs
+}
+
+func newWorker(ctx context.Context, stmt *sql.Stmt, tx *sql.Tx, jobs <-chan string) error {
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+	for id := range jobs {
+		if _, err := stmt.ExecContext(ctx, id); err != nil {
+			if err = tx.Rollback(); err != nil {
+				return err
+			}
+			return err
+		}
+	}
+	return nil
+}
+
+func SoftDelete(ctx context.Context, in []string) error {
+	n := len(in)
+
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+
+	if len(in) == 0 {
+		return errors.New("the list of URLs is empty")
+	}
+
+	fanOutChs := fanOut(in, n)
+
+	stmt, err := tx.PrepareContext(ctx, `UPDATE users SET is_deleted=TRUE WHERE short_url=$1`)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	jobs := make(chan string, n)
+
+	g, _ := errgroup.WithContext(ctx)
+
+	for i := 1; i <= 3; i++ {
+		g.Go(func() error {
+			err = newWorker(ctx, stmt, tx, jobs)
+			if err != nil {
+				return err
+			}
+			return nil
+		})
+	}
+
+	for _, item := range fanOutChs {
+		jobs <- <-item
+	}
+	close(jobs)
+
+	if err := g.Wait(); err != nil {
+		return err
+	}
+
+	if err = tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
 }

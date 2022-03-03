@@ -35,6 +35,9 @@ func main() {
 			r.Post("/batch", dbhandlers.PostBatch)
 		})
 		router.Get("/api/user/urls", dbhandlers.GetURLS)
+		router.Route("/api/user", func(r chi.Router) {
+			r.Delete("/urls", dbhandlers.SoftDelete)
+		})
 	} else {
 		memrepo.New()
 		router.With(mware.RequestHandle, mware.GzipHandle).Post("/", memhandlers.PostURL)
