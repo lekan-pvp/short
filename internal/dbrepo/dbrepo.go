@@ -90,6 +90,8 @@ func GetOriginal(ctx context.Context, short string) (*OriginURL, error) {
 		return nil, err
 	}
 
+	log.Printf("In DB GetOriginal %s %s", result.URL, result.Deleted)
+
 	return result, nil
 }
 
