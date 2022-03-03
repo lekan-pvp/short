@@ -3,6 +3,7 @@ package memhandlers
 import (
 	"github.com/go-chi/chi"
 	"github.com/lekan-pvp/short/internal/memrepo"
+	"log"
 	"net/http"
 )
 
@@ -15,6 +16,7 @@ func GetShort(w http.ResponseWriter, r *http.Request) {
 
 	url, err := memrepo.GetOriginal(short)
 	if err != nil {
+		log.Println("GetOriginal error in MEM")
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}

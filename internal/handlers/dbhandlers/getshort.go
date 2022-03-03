@@ -14,6 +14,7 @@ func GetShort(w http.ResponseWriter, r *http.Request) {
 
 	short := chi.URLParam(r, "short")
 	if short == "" {
+		log.Println("SHORT ERROR")
 		http.Error(w, "url is empty", http.StatusNotFound)
 		return
 	}
