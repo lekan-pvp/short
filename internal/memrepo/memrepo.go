@@ -68,6 +68,7 @@ func PostURL(url Storage) error {
 }
 
 func GetOriginal(short string) (string, error) {
+	log.Println("Get original IN MEM")
 	var url string
 	for _, v := range urls {
 		if v.ShortURL == short {
