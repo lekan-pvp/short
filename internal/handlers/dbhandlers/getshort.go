@@ -41,8 +41,9 @@ func GetShort(w http.ResponseWriter, r *http.Request) {
 
 	if origin.IsDeleted() {
 		log.Println("DELETED")
-		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 		w.WriteHeader(http.StatusGone)
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+
 		return
 	}
 }
