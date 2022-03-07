@@ -1,6 +1,7 @@
 package memrepo
 
 import (
+	"github.com/lekan-pvp/short/internal/config"
 	"reflect"
 	"testing"
 )
@@ -14,8 +15,19 @@ func TestPostURL(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "success test",
+			args: args{
+				url: Storage{
+					UUID:        "123",
+					ShortURL:    "4rSPg8ap",
+					OriginalURL: "http://yandex.ru",
+				},
+			},
+		},
 	}
+	config.New()
+	New()
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if err := PostURL(tt.args.url); (err != nil) != tt.wantErr {
@@ -35,7 +47,13 @@ func TestGetOriginal(t *testing.T) {
 		want    string
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "success test",
+			args: args{
+				short: "4rSPg8ap",
+			},
+			want: "http://yandex.ru",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -61,7 +79,18 @@ func TestGetURLsList(t *testing.T) {
 		want    []ListResponse
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "success test",
+			args: args{
+				uuid: "123",
+			},
+			want: []ListResponse{
+				{
+					ShortURL:    "http://localhost:8080/4rSPg8ap",
+					OriginalURL: "http://yandex.ru",
+				},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
