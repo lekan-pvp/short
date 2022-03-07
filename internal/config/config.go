@@ -41,6 +41,7 @@ func New() {
 		config.DatabaseDSN = databaseDSN
 		config.FileStoragePath = fileStoragePath
 		config.BaseURL = baseURL
+
 	})
 }
 

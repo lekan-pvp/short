@@ -9,12 +9,12 @@ import (
 	"github.com/lekan-pvp/short/internal/handlers/memhandlers"
 	"github.com/lekan-pvp/short/internal/memrepo"
 	"github.com/lekan-pvp/short/internal/mware"
-
 	"log"
 	"net/http"
 )
 
 func main() {
+
 	config.New()
 
 	serverAddress := config.GetServerAddress()

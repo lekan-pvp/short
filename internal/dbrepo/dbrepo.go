@@ -86,11 +86,8 @@ func GetOriginal(ctx context.Context, short string) (*OriginURL, error) {
 
 	err := db.QueryRowContext(ctx, `SELECT orig_url, is_deleted FROM users WHERE short_url=$1;`, short).Scan(&result.URL, &result.Deleted)
 	if err != nil {
-		log.Println("GetOriginal Query error")
 		return nil, err
 	}
-
-	log.Printf("In DB GetOriginal %s %s", result.URL, result.Deleted)
 
 	return result, nil
 }
