@@ -105,30 +105,3 @@ func TestGetURLsList(t *testing.T) {
 		})
 	}
 }
-
-func TestBatchShorten(t *testing.T) {
-	type args struct {
-		uuid string
-		in   []BatchRequest
-	}
-	tests := []struct {
-		name    string
-		args    args
-		want    []BatchResponse
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := BatchShorten(tt.args.uuid, tt.args.in)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("BatchShorten() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("BatchShorten() got = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
