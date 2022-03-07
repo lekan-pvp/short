@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"strconv"
 	"strings"
 	"testing"
 )
@@ -13,7 +14,7 @@ func BenchmarkPostBatch(b *testing.B) {
 	var datas []url.Values
 	for i := 0; i < 5; i++ {
 		data := url.Values{}
-		data.Set("correlation_id", string(i))
+		data.Set("correlation_id", strconv.Itoa(i))
 		data.Set("original_url", "http://yandex.ru")
 		datas = append(datas, data)
 	}
