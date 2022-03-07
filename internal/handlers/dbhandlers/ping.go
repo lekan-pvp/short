@@ -6,6 +6,7 @@ import (
 	"net/http"
 )
 
+// Ping handler checks database connection
 func Ping(w http.ResponseWriter, r *http.Request) {
 	ctx, stop := context.WithCancel(r.Context())
 	defer stop()

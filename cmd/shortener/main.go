@@ -9,6 +9,7 @@ import (
 	"github.com/lekan-pvp/short/internal/handlers/memhandlers"
 	"github.com/lekan-pvp/short/internal/memrepo"
 	"github.com/lekan-pvp/short/internal/mware"
+	"github.com/lekan-pvp/short/internal/pprofservoce"
 	"log"
 	"net/http"
 )
@@ -16,6 +17,10 @@ import (
 func main() {
 
 	config.New()
+
+	if !config.GetPprofStatus() {
+		pprofservoce.PprofService()
+	}
 
 	serverAddress := config.GetServerAddress()
 

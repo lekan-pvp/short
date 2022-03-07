@@ -169,10 +169,15 @@ func BatchShorten(ctx context.Context, uuid string, in []BatchRequest) ([]BatchR
 	return res, nil
 }
 
-func fanOut(input []string, n int) []chan string {
-	chs := make([]chan string, 0, n)
+type Query struct {
+	UserID   string
+	ShortURL string
+}
+
+func fanOut(input []Query, n int) []chan Query {
+	chs := make([]chan Query, 0, n)
 	for i, val := range input {
-		ch := make(chan string, 1)
+		ch := make(chan Query, 1)
 		ch <- val
 		chs = append(chs, ch)
 		close(chs[i])
@@ -180,11 +185,11 @@ func fanOut(input []string, n int) []chan string {
 	return chs
 }
 
-func newWorker(ctx context.Context, stmt *sql.Stmt, tx *sql.Tx, jobs <-chan string) error {
+func newWorker(ctx context.Context, stmt *sql.Stmt, tx *sql.Tx, jobs <-chan Query) error {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 	for id := range jobs {
-		if _, err := stmt.ExecContext(ctx, id); err != nil {
+		if _, err := stmt.ExecContext(ctx, id.ShortURL, id.UserID); err != nil {
 			if err = tx.Rollback(); err != nil {
 				return err
 			}
@@ -194,7 +199,7 @@ func newWorker(ctx context.Context, stmt *sql.Stmt, tx *sql.Tx, jobs <-chan stri
 	return nil
 }
 
-func SoftDelete(ctx context.Context, in []string) error {
+func SoftDelete(ctx context.Context, in []string, uuid string) error {
 	n := len(in)
 
 	tx, err := db.Begin()
@@ -206,16 +211,25 @@ func SoftDelete(ctx context.Context, in []string) error {
 		return errors.New("the list of URLs is empty")
 	}
 
-	fanOutChs := fanOut(in, n)
+	var query []Query
 
-	stmt, err := tx.PrepareContext(ctx, `UPDATE users SET is_deleted=TRUE WHERE short_url=$1`)
+	for _, v := range in {
+		var q Query
+		q.UserID = uuid
+		q.ShortURL = v
+		query = append(query, q)
+	}
+
+	fanOutChs := fanOut(query, n)
+
+	stmt, err := tx.PrepareContext(ctx, `UPDATE users SET is_deleted=TRUE WHERE short_url=$1 AND user_id=$2`)
 	if err != nil {
 		log.Println("stmt error")
 		return err
 	}
 	defer stmt.Close()
 
-	jobs := make(chan string, n)
+	jobs := make(chan Query, n)
 
 	g, _ := errgroup.WithContext(ctx)
 

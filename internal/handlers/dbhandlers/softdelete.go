@@ -20,10 +20,12 @@ func SoftDelete(w http.ResponseWriter, r *http.Request) {
 
 	values := strings.Split(cookie.Value, ":")
 	if len(values) != 2 {
-		log.Panicln("cookie format error...")
+		log.Println("cookie format error...")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	uuid := values[0]
 
 	body, err := io.ReadAll(r.Body)
 	defer r.Body.Close()
@@ -41,7 +43,7 @@ func SoftDelete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = dbrepo.SoftDelete(r.Context(), in); err != nil {
+	if err = dbrepo.SoftDelete(r.Context(), in, uuid); err != nil {
 		log.Println("update db error")
 		http.Error(w, err.Error(), 500)
 		return

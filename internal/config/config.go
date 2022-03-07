@@ -12,6 +12,7 @@ type Config struct {
 	BaseURL         string `env:"BASE_URL" envDefault:"http://localhost:8080"`
 	FileStoragePath string `env:"FILE_STORAGE_PATH" envDefault:"test.json"`
 	DatabaseDSN     string `env:"DATABASE_DSN" envDefault:""`
+	PprofEnabled    bool
 }
 
 var (
@@ -23,6 +24,7 @@ func New() {
 	var databaseDSN string
 	var fileStoragePath string
 	var baseURL string
+	var pprofEnabled bool
 
 	var once sync.Once
 	once.Do(func() {
@@ -34,6 +36,7 @@ func New() {
 		flag.StringVar(&databaseDSN, "d", config.DatabaseDSN, "URI подключения к БД")
 		flag.StringVar(&fileStoragePath, "f", config.FileStoragePath, "file storage")
 		flag.StringVar(&baseURL, "b", config.BaseURL, "Base URL")
+		flag.BoolVar(&pprofEnabled, "p", config.PprofEnabled, "Pprof is enabled")
 
 		flag.Parse()
 
@@ -41,6 +44,7 @@ func New() {
 		config.DatabaseDSN = databaseDSN
 		config.FileStoragePath = fileStoragePath
 		config.BaseURL = baseURL
+		config.PprofEnabled = pprofEnabled
 
 	})
 }
@@ -59,4 +63,8 @@ func GetBaseURL() string {
 
 func GetServerAddress() string {
 	return config.ServerAddress
+}
+
+func GetPprofStatus() bool {
+	return config.PprofEnabled
 }

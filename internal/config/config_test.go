@@ -81,3 +81,23 @@ func TestGetServerAddress(t *testing.T) {
 		})
 	}
 }
+
+func TestGetPprofStatus(t *testing.T) {
+	tests := []struct {
+		name string
+		want bool
+	}{
+		{
+			name: "success test pprof false",
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			New()
+			if got := GetPprofStatus(); got != tt.want {
+				t.Errorf("GetPprofStatus() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
