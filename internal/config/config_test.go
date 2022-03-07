@@ -12,9 +12,10 @@ func TestGetFilePath(t *testing.T) {
 			want: "test.json",
 		},
 	}
+	New()
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			New()
+
 			if got := GetFilePath(); got != tt.want {
 				t.Errorf("GetFilePath() = %v, want %v", got, tt.want)
 			}
@@ -34,7 +35,7 @@ func TestGetDatabaseURI(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			New()
+
 			if got := GetDatabaseURI(); got != tt.want {
 				t.Errorf("GetDatabaseURI() = %v, want %v", got, tt.want)
 			}
@@ -54,7 +55,6 @@ func TestGetBaseURL(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			New()
 			if got := GetBaseURL(); got != tt.want {
 				t.Errorf("GetBaseURL() = %v, want %v", got, tt.want)
 			}
@@ -74,7 +74,6 @@ func TestGetServerAddress(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			New()
 			if got := GetServerAddress(); got != tt.want {
 				t.Errorf("GetServerAddress() = %v, want %v", got, tt.want)
 			}
@@ -94,7 +93,6 @@ func TestGetPprofStatus(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			New()
 			if got := GetPprofStatus(); got != tt.want {
 				t.Errorf("GetPprofStatus() = %v, want %v", got, tt.want)
 			}
