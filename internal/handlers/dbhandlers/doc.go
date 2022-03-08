@@ -20,13 +20,5 @@ dbhandlers cервис генерирует короткие URL из ориги
  /ping
  /api/user/urls [get]
  /api/user/urls [delete]
-
-В файл и память:
-
- / [post]
- /api/shorten [post]
- /{short} [get]
- /api/user/urls [get]
- /api/shorten/batch [post]
 */
 package dbhandlers
