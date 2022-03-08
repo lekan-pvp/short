@@ -15,10 +15,23 @@ import (
 	"strings"
 )
 
+// APIShorten handler make short URL and save them into database.
+//
+// Endpoint:
+// /api/shorten [post]
+//
+// Request body:
+//
+//  {
+//    "url": "http://google.com"
+//  }
+//
+// "url" is an original URL for making a short URL for one
 func APIShorten(w http.ResponseWriter, r *http.Request) {
 	ctx, stop := context.WithCancel(r.Context())
 	defer stop()
 
+	// Authorization is provided by the creation cookie
 	cookie, err := r.Cookie("token")
 	if err != nil || !cookies.CheckCookie(cookie) {
 		cookie = cookies.CreateCookie()
