@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/lekan-pvp/short/internal/cookies"
 	"github.com/lekan-pvp/short/internal/dbrepo"
+	"io"
 	"log"
 	"net/http"
 	"strings"
@@ -26,6 +27,7 @@ func SoftDelete(w http.ResponseWriter, r *http.Request) {
 
 	uuid := values[0]
 
+	data, err := io.ReadAll(r.Body)
 	if err != nil {
 		log.Println("reading body error...")
 		http.Error(w, err.Error(), 500)
@@ -34,7 +36,7 @@ func SoftDelete(w http.ResponseWriter, r *http.Request) {
 
 	var in []string
 
-	if err = json.NewDecoder(r.Body).Decode(&in); err != nil {
+	if err = json.Unmarshal(data, &in); err != nil {
 		log.Println("decoding json error...")
 		http.Error(w, err.Error(), 500)
 		return
