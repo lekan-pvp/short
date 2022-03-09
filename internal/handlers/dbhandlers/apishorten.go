@@ -15,18 +15,28 @@ import (
 	"strings"
 )
 
-// APIShorten handler make short URL and save them into database.
+// APIShorten is a handler to make short URL and save them into database.
 //
 // Endpoint:
 // /api/shorten [post]
 //
-// Request body:
+// Content-Type: application/json
+//
+// Request body example:
 //
 //  {
 //    "url": "http://google.com"
 //  }
 //
 // "url" is an original URL for making a short URL for one
+//
+// Possible response statuses:
+//
+// 201 Created Success status
+// 500 Internal server error
+// 401 Unauthorized
+// 400 Bed Request
+// 409 Status Conflict
 func APIShorten(w http.ResponseWriter, r *http.Request) {
 	ctx, stop := context.WithCancel(r.Context())
 	defer stop()
