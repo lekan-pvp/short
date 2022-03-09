@@ -33,7 +33,13 @@ func New() {
 	var err error
 	filePath = config.GetFilePath()
 	f, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
-	defer f.Close()
+
+	defer func() {
+		if cerr := f.Close(); cerr != nil {
+			err = cerr
+		}
+	}()
+
 	if err != nil {
 		log.Println("open file error", err)
 		panic(err)
@@ -56,8 +62,13 @@ func New() {
 }
 
 func PostURL(url Storage) error {
+	var err error
 	f, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
-	defer f.Close()
+	defer func() {
+		if cerr := f.Close(); err != nil {
+			err = cerr
+		}
+	}()
 	if err != nil {
 		return err
 	}
