@@ -3,7 +3,6 @@ package dbhandlers
 import (
 	"context"
 	"github.com/jackc/pgerrcode"
-	"github.com/lekan-pvp/short/internal/config"
 	"github.com/lekan-pvp/short/internal/cookies"
 	"github.com/lekan-pvp/short/internal/dbrepo"
 	"github.com/lekan-pvp/short/internal/makeshort"
@@ -67,9 +66,10 @@ func PostURL(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	baseURL := config.GetBaseURL()
+	//baseURL := config.GetBaseURL()
 
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.WriteHeader(status)
-	w.Write([]byte(baseURL + "/" + short))
+	//w.Write([]byte(baseURL + "/" + short))
+	w.Write([]byte(short))
 }
