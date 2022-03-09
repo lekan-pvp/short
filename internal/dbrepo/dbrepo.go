@@ -60,7 +60,7 @@ func PostURL(ctx context.Context, rec Storage) (string, error) {
 
 	if err != nil {
 		if err.(*pq.Error).Code == pgerrcode.UniqueViolation {
-			notOk := db.QueryRowContext(ctx, `SELECT short_url FROM users WHERE orig_url=$1;`, rec.OriginalURL).Scan(&result)
+			notOk := db.QueryRowContext(ctx, `SELECT short_url FROM users WHERE orig_url=$1 AND user_id=$2;`, rec.OriginalURL, rec.UUID).Scan(&result)
 			if notOk != nil {
 				return "", notOk
 			}
@@ -68,7 +68,7 @@ func PostURL(ctx context.Context, rec Storage) (string, error) {
 		}
 	}
 
-	return rec.ShortURL, nil
+	return result, nil
 }
 
 type OriginURL struct {
