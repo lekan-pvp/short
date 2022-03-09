@@ -204,6 +204,7 @@ func SoftDelete(ctx context.Context, in []string, uuid string) error {
 
 	tx, err := db.Begin()
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 

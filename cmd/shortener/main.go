@@ -39,9 +39,9 @@ func main() {
 			r.Post("/", dbhandlers.APIShorten)
 			r.Post("/batch", dbhandlers.PostBatch)
 		})
-		router.Get("/api/user/urls", dbhandlers.GetURLS)
 		router.Route("/api/user", func(r chi.Router) {
 			r.Delete("/urls", dbhandlers.SoftDelete)
+			r.Get("/urls", dbhandlers.GetURLS)
 		})
 	} else {
 		memrepo.New()

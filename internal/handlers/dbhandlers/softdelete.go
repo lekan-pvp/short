@@ -43,6 +43,8 @@ func SoftDelete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Println(in)
+
 	if err = dbrepo.SoftDelete(r.Context(), in, uuid); err != nil {
 		log.Println("update db error")
 		http.Error(w, err.Error(), 500)
