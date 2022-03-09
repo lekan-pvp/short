@@ -68,7 +68,7 @@ func PostURL(ctx context.Context, rec Storage) (string, error) {
 		}
 	}
 
-	return result, nil
+	return rec.ShortURL, nil
 }
 
 type OriginURL struct {

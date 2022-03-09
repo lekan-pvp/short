@@ -56,6 +56,8 @@ func PostURL(w http.ResponseWriter, r *http.Request) {
 	url := string(body)
 	short := makeshort.GenerateShortLink(url, uuid)
 
+	log.Println(short)
+
 	record := memrepo.Storage{
 		UUID:        uuid,
 		ShortURL:    short,
@@ -68,9 +70,10 @@ func PostURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Println(short)
 	baseURL := config.GetBaseURL()
 
-	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(baseURL + "/" + short))
 }

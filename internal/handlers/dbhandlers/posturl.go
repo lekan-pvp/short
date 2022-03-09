@@ -57,6 +57,9 @@ func PostURL(w http.ResponseWriter, r *http.Request) {
 	status := http.StatusCreated
 
 	short, err = dbrepo.PostURL(ctx, record)
+
+	log.Println(short)
+
 	if err != nil {
 		if err.(*pq.Error).Code == pgerrcode.UniqueViolation {
 			status = http.StatusConflict
@@ -72,5 +75,5 @@ func PostURL(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(status)
 	w.Write([]byte(baseURL + "/" + short))
-	log.Println(short)
+
 }
