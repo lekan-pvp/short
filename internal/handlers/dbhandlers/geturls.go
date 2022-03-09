@@ -9,6 +9,29 @@ import (
 	"strings"
 )
 
+// GetURLS is a handler that receives a list of Short and Original urls by user ID
+//
+// Endpoint: GET /api/user/urls
+//
+// Content-Type: application/json
+//
+// Response Example:
+//
+//  [
+//    {
+//        "short_url": "http://...",
+//        "original_url": "http://..."
+//    },
+//    ...
+//  ]
+//
+// Authorization by symmetric cookie.
+//
+// Possible response statuses:
+// 200 OK
+// 500 Internal Server Error
+// 204 No Content
+// 401 Unauthorized
 func GetURLS(w http.ResponseWriter, r *http.Request) {
 	ctx, stop := context.WithCancel(r.Context())
 	defer stop()

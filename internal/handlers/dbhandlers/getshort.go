@@ -18,10 +18,10 @@ import (
 // Content-Type: text/plain
 //
 // Possible response statuses:
-// 307 Status Temporary Redirect - Success
-// 400 Status Bad Request
-// 410 Status Gone if record in database is deleted
-// 404 Status Not Found if record not found in database
+// 307 Temporary Redirect - Success
+// 400 Bad Request
+// 410 Gone if record in database is deleted
+// 404 Not Found if record not found in database
 func GetShort(w http.ResponseWriter, r *http.Request) {
 	ctx, stop := context.WithCancel(r.Context())
 	defer stop()
