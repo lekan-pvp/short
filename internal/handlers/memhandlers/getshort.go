@@ -21,6 +21,7 @@ func GetShort(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Println(url)
 	w.Header().Set("Content-Type", "text/plain")
 	w.Header().Set("Location", url)
 	w.WriteHeader(http.StatusTemporaryRedirect)
