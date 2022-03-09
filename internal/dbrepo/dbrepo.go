@@ -64,7 +64,7 @@ func PostURL(ctx context.Context, rec Storage) (string, error) {
 			if notOk != nil {
 				return "", notOk
 			}
-			return "", err
+			return result, err
 		}
 	}
 
