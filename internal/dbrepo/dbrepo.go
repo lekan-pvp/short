@@ -8,7 +8,6 @@ import (
 	"github.com/lekan-pvp/short/internal/config"
 	"github.com/lekan-pvp/short/internal/makeshort"
 	"github.com/lib/pq"
-	_ "github.com/lib/pq"
 	"golang.org/x/sync/errgroup"
 	"log"
 )
