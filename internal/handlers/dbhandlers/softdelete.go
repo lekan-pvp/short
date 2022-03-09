@@ -35,7 +35,7 @@ func SoftDelete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println(body)
+	log.Println(string(body))
 
 	var in []string
 
