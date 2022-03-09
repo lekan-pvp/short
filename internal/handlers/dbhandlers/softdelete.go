@@ -35,6 +35,8 @@ func SoftDelete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Println(body)
+
 	var in []string
 
 	if err = json.Unmarshal(body, &in); err != nil {
