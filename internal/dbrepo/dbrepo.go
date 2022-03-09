@@ -215,6 +215,7 @@ func SoftDelete(ctx context.Context, in []string, uuid string) error {
 	var query []Query
 
 	for _, v := range in {
+		log.Println(v)
 		var q Query
 		q.UserID = uuid
 		q.ShortURL = v
