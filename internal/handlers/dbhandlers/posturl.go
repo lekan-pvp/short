@@ -68,8 +68,9 @@ func PostURL(w http.ResponseWriter, r *http.Request) {
 
 	//baseURL := config.GetBaseURL()
 
-	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(status)
 	//w.Write([]byte(baseURL + "/" + short))
+	log.Println(short)
 	w.Write([]byte(short))
 }

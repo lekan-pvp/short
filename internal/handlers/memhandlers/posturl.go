@@ -1,7 +1,6 @@
 package memhandlers
 
 import (
-	"github.com/lekan-pvp/short/internal/config"
 	"github.com/lekan-pvp/short/internal/cookies"
 	"github.com/lekan-pvp/short/internal/makeshort"
 	"github.com/lekan-pvp/short/internal/memrepo"
@@ -68,9 +67,10 @@ func PostURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	baseURL := config.GetBaseURL()
+	//baseURL := config.GetBaseURL()
 
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(baseURL + "/" + short))
+	//w.Write([]byte(baseURL + "/" + short))
+	w.Write([]byte(short))
 }
