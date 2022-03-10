@@ -8,6 +8,29 @@ import (
 	"strings"
 )
 
+// PostBatch is a handler that accepts in the request body a set of URLs to shorten in the format:
+//
+//  [
+//    {
+//        "correlation_id": "<string id>",
+//        "original_url": "<URL for shorten>"
+//    },
+//    ...
+//  ]
+//
+// As a response, the handler should return data in the format:
+//
+//  [
+//    {
+//        "correlation_id": "string id from request object",
+//        "short_url": "<result short URL>"
+//    },
+//    ...
+//  ]
+//
+// Possible response statuses:
+// 201 Created it's OK
+// 500 Internal Server Error
 func PostBatch(w http.ResponseWriter, r *http.Request) {
 	var uuid string
 

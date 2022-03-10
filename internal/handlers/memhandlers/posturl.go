@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-// PostURL is a handler that makes a short url and save it in database.
+// PostURL is a handler that makes a short url and save it in memory and file.
 //
 // Endpoint / [post]
 //

@@ -14,6 +14,20 @@ import (
 	"strings"
 )
 
+// PostURL is a handler that makes a short url and save it in database.
+//
+// Endpoint / [post]
+//
+// Content-Type: text/plain
+//
+// Request body example:
+// http://yandex.ru
+//
+// Possible response statuses:
+// 201 Status Created
+// 401 Status Unauthorized
+// 400 Status Bad Request
+// 500 Status Internal Server Error
 func PostURL(w http.ResponseWriter, r *http.Request) {
 	var uuid string
 	var cookie *http.Cookie

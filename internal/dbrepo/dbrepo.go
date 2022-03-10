@@ -12,6 +12,7 @@ import (
 	"log"
 )
 
+// Storage is a main data type for store datas in database
 type Storage struct {
 	UUID          string `json:"uuid" db:"user_id"`
 	ShortURL      string `json:"short_url" db:"short_url"`

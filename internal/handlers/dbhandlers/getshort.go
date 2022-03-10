@@ -11,7 +11,7 @@ import (
 // GetShort is a handler that receives original URL by short URL.
 //
 // Endpoint:
-// /{short} [get]
+// GET /{short}
 //
 // where {short} is a short URL
 //

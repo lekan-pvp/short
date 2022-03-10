@@ -10,6 +10,19 @@ import (
 	"strings"
 )
 
+// SoftDelete is a asynchronous handler which accepts a list of short URL identifiers to remove in the format:
+//
+//  [ "a", "b", "c", "d", ...]
+//
+// The user who created the URL can successfully delete the URL.
+// When requesting a remote URL using the GET /{id} handler, you need to return the status 410 Gone.
+//
+// Possible response statuses:
+// 202 Accepted it's OK
+// 500 Internal Server Error
+//
+// TODO
+// Handle 401 Unauthorized status
 func SoftDelete(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("token")
 	if err != nil || !cookies.CheckCookie(cookie) {
@@ -49,5 +62,5 @@ func SoftDelete(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	w.WriteHeader(202)
+	w.WriteHeader(http.StatusAccepted)
 }

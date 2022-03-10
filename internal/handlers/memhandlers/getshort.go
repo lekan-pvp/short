@@ -7,6 +7,19 @@ import (
 	"net/http"
 )
 
+// GetShort is a handler that receives original URL by short URL.
+//
+// Endpoint:
+// GET /{short}
+//
+// where {short} is a short URL
+//
+// Content-Type: text/plain
+//
+// Possible response statuses:
+// 307 Temporary Redirect - Success
+// 400 Bad Request
+// 404 Not Found if record not found in memory or file
 func GetShort(w http.ResponseWriter, r *http.Request) {
 	short := chi.URLParam(r, "short")
 	if short == "" {
