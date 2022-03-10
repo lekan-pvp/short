@@ -16,7 +16,7 @@ import (
 
 // PostURL is a handler that makes a short url and save it in database.
 //
-// Endpoint / [post]
+// Endpoint POST /
 //
 // Content-Type: text/plain
 //

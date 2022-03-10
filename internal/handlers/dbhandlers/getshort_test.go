@@ -8,15 +8,14 @@ import (
 	"net/http"
 )
 
-// Example using Chi router
-func ExampleAPIShorten() {
+func ExampleGetShort() {
 	router := chi.NewRouter()
 	config.New()
 	serverAddress := config.GetServerAddress()
 	dbDSN := config.GetDatabaseURI()
 	if dbDSN != "" {
 		dbrepo.New()
-		router.Post("/api/shorten", APIShorten)
+		router.Get("/{short}", GetShort)
 	}
 	log.Fatal(http.ListenAndServe(serverAddress, router))
 }

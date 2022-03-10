@@ -12,7 +12,13 @@ import (
 	"log"
 )
 
-// Storage is a main data type for store datas in database
+// Storage is a main data type for store datas in database.
+//
+// UUID string ID of user from cookie
+// ShortURL string is a generated short url from original url
+// OriginalURL string is an original url for which generate short url
+// CorrelationID string identifier
+// DeleteFlag is a flag for soft deleting in database
 type Storage struct {
 	UUID          string `json:"uuid" db:"user_id"`
 	ShortURL      string `json:"short_url" db:"short_url"`
@@ -27,6 +33,7 @@ type URL struct {
 
 var db *sql.DB
 
+// New method for setup database and creating a table.
 func New() {
 	var err error
 	databaseDSN := config.GetDatabaseURI()
@@ -45,6 +52,8 @@ func New() {
 	}
 }
 
+// Ping method checks database connection.
+// Used in dbhandlers.Ping handler.
 func Ping(ctx context.Context) error {
 	if err := db.PingContext(ctx); err != nil {
 		return err
@@ -52,6 +61,8 @@ func Ping(ctx context.Context) error {
 	return nil
 }
 
+// PostURL method for inserting short url and original url in database by user id.
+// Used in dbhandlers.PostURL and dbhandlers.APIShorten handlers.
 func PostURL(ctx context.Context, rec Storage) (string, error) {
 	log.Println("IN InsertUserRepo short url =", rec.ShortURL)
 	_, err := db.ExecContext(ctx, `INSERT INTO users(user_id, short_url, orig_url) VALUES ($1, $2, $3);`, rec.UUID, rec.ShortURL, rec.OriginalURL)
@@ -71,15 +82,20 @@ func PostURL(ctx context.Context, rec Storage) (string, error) {
 	return rec.ShortURL, nil
 }
 
+// OriginURL is a struct for returning result from GetOriginal method and for making json response body in
+// dbhandlers.GetShort handler.
 type OriginURL struct {
 	URL     string
 	Deleted bool
 }
 
+// IsDeleted is a method for check delete flag in database.
 func (u OriginURL) IsDeleted() bool {
 	return u.Deleted
 }
 
+// GetOriginal is a method to get original url from database.
+// Used in dbhandlers.GetShort handler.
 func GetOriginal(ctx context.Context, short string) (*OriginURL, error) {
 	log.Println("GetOriginal IN DB")
 	result := &OriginURL{}
@@ -92,11 +108,15 @@ func GetOriginal(ctx context.Context, short string) (*OriginURL, error) {
 	return result, nil
 }
 
+// ListResponse is a struct to  form response body in
+// dbhandlers.GetURLS handler.
 type ListResponse struct {
 	ShortURL    string `json:"short_url"`
 	OriginalURL string `json:"original_url"`
 }
 
+// GetURLSList is a method for receive and form response in dbhandlers.GetURLS
+// handler.
 func GetURLsList(ctx context.Context, uuid string) ([]ListResponse, error) {
 	var list []ListResponse
 
@@ -121,16 +141,22 @@ func GetURLsList(ctx context.Context, uuid string) ([]ListResponse, error) {
 	return list, nil
 }
 
+// BatchResponse is a struct for encode response body.
+// Used in dbhandlers.GetURLS handler.
 type BatchResponse struct {
 	CorrelationID string `json:"correlation_id"`
 	ShortURL      string `json:"short_url"`
 }
 
+// BatchRequest is a struct for decode request body and inserting data to database.
+// Used in dbhandlers.GetURLS.
 type BatchRequest struct {
 	CorrelationID string `json:"correlation_id"`
 	OriginalURL   string `json:"original_url"`
 }
 
+// BatchShorten is a method accepting in the request body a set of URLs to shorten and returning a list of original URLs.
+// Used in dbhandlers.
 func BatchShorten(ctx context.Context, uuid string, in []BatchRequest) ([]BatchResponse, error) {
 	var res []BatchResponse
 	base := config.GetBaseURL()
@@ -169,6 +195,7 @@ func BatchShorten(ctx context.Context, uuid string, in []BatchRequest) ([]BatchR
 	return res, nil
 }
 
+// Query is a struct for setting Delete Flags in database.
 type Query struct {
 	UserID   string
 	ShortURL string
@@ -199,6 +226,9 @@ func newWorker(ctx context.Context, stmt *sql.Stmt, tx *sql.Tx, jobs <-chan Quer
 	return nil
 }
 
+// SoftDelete is a method to set a DeleteFlag in database.
+// Used in dbhandlers.SoftDelete handler.
+// This in a concurrency method.
 func SoftDelete(ctx context.Context, in []string, uuid string) error {
 	n := len(in)
 

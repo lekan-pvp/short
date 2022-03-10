@@ -11,6 +11,8 @@ import (
 
 // PostBatch is a handler that accepts in the request body a set of URLs to shorten in the format:
 //
+// Endpoint: POST /api/shorten/batch
+//
 //  [
 //    {
 //        "correlation_id": "<string id>",
