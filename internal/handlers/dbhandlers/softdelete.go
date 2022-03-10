@@ -12,6 +12,8 @@ import (
 
 // SoftDelete is a asynchronous handler which accepts a list of short URL identifiers to remove in the format:
 //
+// Endpoint: DELETE /urls
+//
 //  [ "a", "b", "c", "d", ...]
 //
 // The user who created the URL can successfully delete the URL.

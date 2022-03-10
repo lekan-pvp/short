@@ -13,12 +13,12 @@ dbhandlers cервис генерирует короткие URL из ориги
 
 В бд:
 
- / [post]
- /api/shorten [post] -
- /{short} [get]
- /api/shorten/batch [post]
- /ping
- /api/user/urls [get]
- /api/user/urls [delete]
+ POST /
+ POST /api/shorten
+ GET /{short}
+ POST /api/shorten/batch
+ GET /ping
+ GET /api/user/urls
+ DELETE /api/user/urls
 */
 package dbhandlers
