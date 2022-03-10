@@ -6,6 +6,9 @@ import (
 	"github.com/lekan-pvp/short/internal/dbrepo"
 	"log"
 	"net/http"
+	"net/http/httptest"
+	"strings"
+	"testing"
 )
 
 func ExamplePostURL() {
@@ -18,4 +21,18 @@ func ExamplePostURL() {
 		router.Post("/", PostURL)
 	}
 	log.Fatal(http.ListenAndServe(serverAddress, router))
+}
+
+func BenchmarkPostURL(b *testing.B) {
+	data := "http://yandex.ru"
+	r, _ := http.NewRequest("POST", "/", strings.NewReader(data))
+	w := httptest.NewRecorder()
+	handler := http.HandlerFunc(PostURL)
+
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		handler.ServeHTTP(w, r)
+	}
 }
