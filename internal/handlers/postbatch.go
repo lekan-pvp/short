@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/lekan-pvp/short/internal/cookies"
-	"github.com/lekan-pvp/short/internal/dbrepo"
+	"github.com/lekan-pvp/short/internal/models"
 	"net/http"
 	"strings"
 )
@@ -41,7 +41,7 @@ func PostBatch(repo Repo) http.HandlerFunc {
 
 		var uuid string
 
-		var in []dbrepo.BatchRequest
+		var in []models.BatchRequest
 
 		cookie, err := r.Cookie("token")
 		if err != nil || !cookies.CheckCookie(cookie) {

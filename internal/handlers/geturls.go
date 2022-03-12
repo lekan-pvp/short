@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/lekan-pvp/short/internal/cookies"
-	"github.com/lekan-pvp/short/internal/dbrepo"
+	"github.com/lekan-pvp/short/internal/models"
 	"net/http"
 	"strings"
 )
@@ -54,7 +54,7 @@ func GetURLs(repo Repo) http.HandlerFunc {
 
 		uuid := values[0]
 
-		var list []dbrepo.ListResponse
+		var list []models.ListResponse
 
 		list, err = repo.GetURLsList(ctx, uuid)
 		if err != nil {

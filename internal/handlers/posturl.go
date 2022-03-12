@@ -5,8 +5,8 @@ import (
 	"github.com/jackc/pgerrcode"
 	"github.com/lekan-pvp/short/internal/config"
 	"github.com/lekan-pvp/short/internal/cookies"
-	"github.com/lekan-pvp/short/internal/dbrepo"
 	"github.com/lekan-pvp/short/internal/makeshort"
+	"github.com/lekan-pvp/short/internal/models"
 	"github.com/lib/pq"
 	"io"
 	"log"
@@ -63,7 +63,7 @@ func PostURL(repo Repo) http.HandlerFunc {
 		ctx, stop := context.WithCancel(r.Context())
 		defer stop()
 
-		record := dbrepo.Storage{
+		record := models.Storage{
 			UUID:        uuid,
 			ShortURL:    short,
 			OriginalURL: url,
@@ -92,4 +92,3 @@ func PostURL(repo Repo) http.HandlerFunc {
 		w.Write([]byte(baseURL + "/" + short))
 	}
 }
-

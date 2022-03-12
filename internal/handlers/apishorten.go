@@ -6,9 +6,8 @@ import (
 	"github.com/jackc/pgerrcode"
 	"github.com/lekan-pvp/short/internal/config"
 	"github.com/lekan-pvp/short/internal/cookies"
-	"github.com/lekan-pvp/short/internal/dbrepo"
 	"github.com/lekan-pvp/short/internal/makeshort"
-	"github.com/lekan-pvp/short/internal/memrepo"
+	"github.com/lekan-pvp/short/internal/models"
 	"github.com/lib/pq"
 	"log"
 	"net/http"
@@ -59,7 +58,7 @@ func APIShorten(repo Repo) http.HandlerFunc {
 
 		uuid := values[0]
 
-		long := &dbrepo.URL{}
+		long := &models.URL{}
 
 		if err := json.NewDecoder(r.Body).Decode(long); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -70,7 +69,7 @@ func APIShorten(repo Repo) http.HandlerFunc {
 
 		short := makeshort.GenerateShortLink(long.URL, uuid)
 
-		record := dbrepo.Storage{
+		record := models.Storage{
 			UUID:          uuid,
 			ShortURL:      short,
 			OriginalURL:   long.URL,
@@ -93,7 +92,7 @@ func APIShorten(repo Repo) http.HandlerFunc {
 
 		base := config.Cfg.BaseURL
 
-		result := memrepo.ResultResponse{
+		result := models.ResultResponse{
 			Result: base + "/" + short,
 		}
 
