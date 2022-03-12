@@ -30,6 +30,7 @@ func main() {
 	router.Use(middleware.Logger)
 
 	if dbDSN != "" {
+		log.Println("dbrepo")
 		dbRepo := dbrepo.New(config.Cfg)
 		router.With(mware.Ping).Get("/ping", handlers.PingDB(dbRepo))
 		router.Post("/", handlers.PostURL(dbRepo))
@@ -43,6 +44,7 @@ func main() {
 			r.Get("/urls", handlers.GetURLs(dbRepo))
 		})
 	} else {
+		log.Println("memrepo")
 		memRepo := memrepo.New(config.Cfg)
 		router.With(mware.RequestHandle, mware.GzipHandle).Post("/", handlers.PostURL(memRepo))
 		router.With(mware.GzipHandle).Get("/{short}", handlers.GetShort(memRepo))

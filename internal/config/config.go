@@ -16,7 +16,7 @@ type Config struct {
 }
 
 var (
-	Cfg *Config
+	Cfg Config
 )
 
 func New() {
@@ -29,7 +29,7 @@ func New() {
 	var once sync.Once
 	once.Do(func() {
 		if err := env.Parse(&Cfg); err != nil {
-			log.Fatalln("can't parse Config")
+			log.Fatal("can't parse Config", err)
 		}
 
 		flag.StringVar(&serverAddress, "a", Cfg.ServerAddress, "адрес и порт запуска сервиса")
