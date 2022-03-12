@@ -5,8 +5,7 @@ import (
 	"github.com/go-chi/chi/middleware"
 	"github.com/lekan-pvp/short/internal/config"
 	"github.com/lekan-pvp/short/internal/dbrepo"
-	"github.com/lekan-pvp/short/internal/handlers/dbhandlers"
-	"github.com/lekan-pvp/short/internal/handlers/memhandlers"
+	"github.com/lekan-pvp/short/internal/handlers"
 	"github.com/lekan-pvp/short/internal/memrepo"
 	"github.com/lekan-pvp/short/internal/mware"
 	"github.com/lekan-pvp/short/internal/pprofservoce"
@@ -18,38 +17,38 @@ func main() {
 
 	config.New()
 
-	if config.GetPprofStatus() {
+	if config.Cfg.PprofEnabled {
 		pprofservoce.PprofService()
 	}
 
-	serverAddress := config.GetServerAddress()
-
-	dbDSN := config.GetDatabaseURI()
+	serverAddress := config.Cfg.ServerAddress
 
 	router := chi.NewRouter()
+
+	dbDSN := config.Cfg.DatabaseDSN
 
 	router.Use(middleware.Logger)
 
 	if dbDSN != "" {
-		dbrepo.New()
-		router.With(mware.Ping).Get("/ping", dbhandlers.Ping)
-		router.Post("/", dbhandlers.PostURL)
-		router.Get("/{short}", dbhandlers.GetShort)
+		dbRepo := dbrepo.New(config.Cfg)
+		router.With(mware.Ping).Get("/ping", handlers.PingDB(dbRepo))
+		router.Post("/", handlers.PostURL(dbRepo))
+		router.Get("/{short}", handlers.GetShort(dbRepo))
 		router.Route("/api/shorten", func(r chi.Router) {
-			r.Post("/", dbhandlers.APIShorten)
-			r.Post("/batch", dbhandlers.PostBatch)
+			r.Post("/", handlers.APIShorten(dbRepo))
+			r.Post("/batch", handlers.PostBatch(dbRepo))
 		})
 		router.Route("/api/user", func(r chi.Router) {
-			r.Delete("/urls", dbhandlers.SoftDelete)
-			r.Get("/urls", dbhandlers.GetURLS)
+			r.Delete("/urls", handlers.SoftDelete(dbRepo))
+			r.Get("/urls", handlers.GetURLs(dbRepo))
 		})
 	} else {
-		memrepo.New()
-		router.With(mware.RequestHandle, mware.GzipHandle).Post("/", memhandlers.PostURL)
-		router.With(mware.GzipHandle).Get("/{short}", memhandlers.GetShort)
-		router.With(mware.RequestHandle, mware.GzipHandle).Post("/api/shorten", memhandlers.APIShorten)
-		router.Get("/api/user/urls", memhandlers.GetURLS)
-		router.Post("/api/shorten/batch", memhandlers.PostBatch)
+		memRepo := memrepo.New(config.Cfg)
+		router.With(mware.RequestHandle, mware.GzipHandle).Post("/", handlers.PostURL(memRepo))
+		router.With(mware.GzipHandle).Get("/{short}", handlers.GetShort(memRepo))
+		router.With(mware.RequestHandle, mware.GzipHandle).Post("/api/shorten", handlers.APIShorten(memRepo))
+		router.Get("/api/user/urls", handlers.GetURLs(memRepo))
+		router.Post("/api/shorten/batch", handlers.PostBatch(memRepo))
 	}
 
 	err := http.ListenAndServe(serverAddress, router)

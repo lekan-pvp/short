@@ -16,7 +16,7 @@ type Config struct {
 }
 
 var (
-	config Config
+	Cfg *Config
 )
 
 func New() {
@@ -28,43 +28,23 @@ func New() {
 
 	var once sync.Once
 	once.Do(func() {
-		if err := env.Parse(&config); err != nil {
+		if err := env.Parse(&Cfg); err != nil {
 			log.Fatalln("can't parse Config")
 		}
 
-		flag.StringVar(&serverAddress, "a", config.ServerAddress, "адрес и порт запуска сервиса")
-		flag.StringVar(&databaseDSN, "d", config.DatabaseDSN, "URI подключения к БД")
-		flag.StringVar(&fileStoragePath, "f", config.FileStoragePath, "file storage")
-		flag.StringVar(&baseURL, "b", config.BaseURL, "Base URL")
-		flag.BoolVar(&pprofEnabled, "p", config.PprofEnabled, "Pprof is enabled")
+		flag.StringVar(&serverAddress, "a", Cfg.ServerAddress, "адрес и порт запуска сервиса")
+		flag.StringVar(&databaseDSN, "d", Cfg.DatabaseDSN, "URI подключения к БД")
+		flag.StringVar(&fileStoragePath, "f", Cfg.FileStoragePath, "file storage")
+		flag.StringVar(&baseURL, "b", Cfg.BaseURL, "Base URL")
+		flag.BoolVar(&pprofEnabled, "p", Cfg.PprofEnabled, "Pprof is enabled")
 
 		flag.Parse()
 
-		config.ServerAddress = serverAddress
-		config.DatabaseDSN = databaseDSN
-		config.FileStoragePath = fileStoragePath
-		config.BaseURL = baseURL
-		config.PprofEnabled = pprofEnabled
+		Cfg.ServerAddress = serverAddress
+		Cfg.DatabaseDSN = databaseDSN
+		Cfg.FileStoragePath = fileStoragePath
+		Cfg.BaseURL = baseURL
+		Cfg.PprofEnabled = pprofEnabled
 
 	})
-}
-
-func GetFilePath() string {
-	return config.FileStoragePath
-}
-
-func GetDatabaseURI() string {
-	return config.DatabaseDSN
-}
-
-func GetBaseURL() string {
-	return config.BaseURL
-}
-
-func GetServerAddress() string {
-	return config.ServerAddress
-}
-
-func GetPprofStatus() bool {
-	return config.PprofEnabled
 }
