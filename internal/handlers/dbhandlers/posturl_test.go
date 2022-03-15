@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"strings"
 	"testing"
 )
@@ -24,15 +25,19 @@ func ExamplePostURL() {
 }
 
 func BenchmarkPostURL(b *testing.B) {
-	data := "http://yandex.ru"
-	r, _ := http.NewRequest("POST", "/", strings.NewReader(data))
-	w := httptest.NewRecorder()
-	handler := http.HandlerFunc(PostURL)
-
+	var baseURLs []string
+	for i := 0; i < b.N; i++ {
+		url := "http://yandex" + strconv.Itoa(i) + ".ru"
+		baseURLs = append(baseURLs, url)
+	}
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
+		r, _ := http.NewRequest("POST", "/", strings.NewReader(baseURLs[i]))
+		w := httptest.NewRecorder()
+		handler := http.HandlerFunc(PostURL)
+
 		handler.ServeHTTP(w, r)
 	}
 }
