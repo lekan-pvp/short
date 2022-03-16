@@ -26,7 +26,7 @@ type ResultResponse struct {
 	Result string `json:"result"`
 }
 
-var urls []Storage
+var urls = make([]Storage, 0)
 var filePath string
 
 func New() {
@@ -97,7 +97,7 @@ type ListResponse struct {
 
 func GetURLsList(uuid string) ([]ListResponse, error) {
 	base := config.GetBaseURL()
-	var list []ListResponse
+	var list = make([]ListResponse, 0)
 
 	if len(urls) == 0 {
 		return nil, errors.New("not found")
@@ -126,7 +126,7 @@ type BatchRequest struct {
 
 func BatchShorten(uuid string, in []BatchRequest) ([]BatchResponse, error) {
 	base := config.GetBaseURL()
-	var res []BatchResponse
+	var res = make([]BatchResponse, 0)
 	for _, v := range in {
 		short := makeshort.GenerateShortLink(v.OriginalURL, v.CorrelationID)
 		res = append(res, BatchResponse{CorrelationID: v.CorrelationID, ShortURL: base + "/" + short})

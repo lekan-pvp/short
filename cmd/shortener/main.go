@@ -18,7 +18,7 @@ func main() {
 
 	config.New()
 
-	if config.GetPprofStatus() {
+	if !config.GetPprofStatus() {
 		pprofservoce.PprofService()
 	}
 

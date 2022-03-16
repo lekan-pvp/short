@@ -8,7 +8,7 @@ import (
 )
 
 func PprofService() {
-	fmem, err := os.Create("profiles/base.pprof")
+	fmem, err := os.Create("profiles/result.pprof")
 	if err != nil {
 		log.Fatal("could not create memory profile: ", err)
 	}
