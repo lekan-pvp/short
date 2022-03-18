@@ -15,7 +15,7 @@ type MemoryRepo struct {
 
 func New(cfg config.Config) *MemoryRepo {
 	var err error
-	var r MemoryRepo
+	var r *MemoryRepo
 	filePath := cfg.FileStoragePath
 	f, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
 
@@ -44,5 +44,5 @@ func New(cfg config.Config) *MemoryRepo {
 	if err == io.EOF {
 		return nil
 	}
-	return &r
+	return r
 }
