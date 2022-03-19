@@ -17,7 +17,7 @@ func ExampleGetShort() {
 	dbDSN := config.Cfg.DatabaseDSN
 	if dbDSN != "" {
 		dbRepo := dbrepo.New(config.Cfg)
-		router.Get("/{short}", GetShort(dbRepo))
+		router.Get("/{short}", GetShort(&dbRepo))
 	}
 	log.Fatal(http.ListenAndServe(serverAddress, router))
 }
@@ -27,7 +27,7 @@ func BenchmarkGetShort(b *testing.B) {
 	w := httptest.NewRecorder()
 	config.New()
 	dbRepo := dbrepo.New(config.Cfg)
-	handler := GetShort(dbRepo)
+	handler := GetShort(&dbRepo)
 
 	b.ReportAllocs()
 	b.ResetTimer()

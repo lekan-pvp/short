@@ -18,7 +18,7 @@ func ExamplePing() {
 
 	if dbDSN != "" {
 		dbRepo := dbrepo.New(config.Cfg)
-		router.Get("/ping", PingDB(dbRepo))
+		router.Get("/ping", PingDB(&dbRepo))
 	}
 	log.Fatal(http.ListenAndServe(serverAddress, router))
 }
@@ -28,7 +28,7 @@ func BenchmarkPing(b *testing.B) {
 	w := httptest.NewRecorder()
 	config.New()
 	dbRepo := dbrepo.New(config.Cfg)
-	handler := GetShort(dbRepo)
+	handler := GetShort(&dbRepo)
 
 	b.ReportAllocs()
 	b.ResetTimer()

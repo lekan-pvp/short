@@ -18,7 +18,7 @@ func ExamplePostURL() {
 	dbDSN := config.Cfg.DatabaseDSN
 	if dbDSN != "" {
 		dbRepo := dbrepo.New(config.Cfg)
-		router.Post("/", PostURL(dbRepo))
+		router.Post("/", PostURL(&dbRepo))
 	}
 	log.Fatal(http.ListenAndServe(serverAddress, router))
 }
@@ -28,7 +28,7 @@ func BenchmarkPostURL(b *testing.B) {
 	r, _ := http.NewRequest("POST", "/", strings.NewReader(data))
 	w := httptest.NewRecorder()
 	dbRepo := dbrepo.New(config.Cfg)
-	handler := PostURL(dbRepo)
+	handler := PostURL(&dbRepo)
 
 	b.ReportAllocs()
 	b.ResetTimer()

@@ -21,7 +21,7 @@ func ExamplePostBatch() {
 	dbDSN := config.Cfg.DatabaseDSN
 	if dbDSN != "" {
 		dbRepo := dbrepo.New(config.Cfg)
-		router.Post("/api/shorten/batch", PostBatch(dbRepo))
+		router.Post("/api/shorten/batch", PostBatch(&dbRepo))
 	}
 	log.Fatal(http.ListenAndServe(serverAddress, router))
 }
@@ -40,7 +40,7 @@ func BenchmarkPostBatch(b *testing.B) {
 	w := httptest.NewRecorder()
 	config.New()
 	dbRepo := dbrepo.New(config.Cfg)
-	handler := PostBatch(dbRepo)
+	handler := PostBatch(&dbRepo)
 
 	b.ReportAllocs()
 	b.ResetTimer()

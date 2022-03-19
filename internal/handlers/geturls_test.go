@@ -18,7 +18,7 @@ func ExampleGetURLS() {
 	config.New()
 	if dbDSN != "" {
 		dbRepo := dbrepo.New(config.Cfg)
-		router.Get("/api/user/urls", GetURLs(dbRepo))
+		router.Get("/api/user/urls", GetURLs(&dbRepo))
 	}
 	log.Fatal(http.ListenAndServe(serverAddress, router))
 }
@@ -28,7 +28,7 @@ func BenchmarkGetURLS(b *testing.B) {
 	w := httptest.NewRecorder()
 	config.New()
 	dbRepo := dbrepo.New(config.Cfg)
-	handler := GetURLs(dbRepo)
+	handler := GetURLs(&dbRepo)
 
 	b.ReportAllocs()
 	b.ResetTimer()

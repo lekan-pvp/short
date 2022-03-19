@@ -21,7 +21,7 @@ func ExampleSoftDelete() {
 	dbDSN := config.Cfg.DatabaseDSN
 	if dbDSN != "" {
 		dbRepo := dbrepo.New(config.Cfg)
-		router.Delete("/urls", PostURL(dbRepo))
+		router.Delete("/urls", PostURL(&dbRepo))
 	}
 	log.Fatal(http.ListenAndServe(serverAddress, router))
 }
@@ -42,7 +42,7 @@ func BenchmarkSoftDelete(b *testing.B) {
 
 	dbRepo := dbrepo.New(config.Cfg)
 
-	handler := SoftDelete(dbRepo)
+	handler := SoftDelete(&dbRepo)
 
 	b.ReportAllocs()
 	b.ResetTimer()

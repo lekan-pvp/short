@@ -1,39 +1,70 @@
 package memrepo
 
-import "testing"
+import (
+	"context"
+	"github.com/lekan-pvp/short/internal/models"
+	"github.com/stretchr/testify/assert"
+	"reflect"
+	"testing"
+)
 
 func TestMemoryRepo_GetOriginal(t *testing.T) {
 	type fields struct {
-		db []Storage
+		db []models.Storage
 	}
 	type args struct {
+		in0   context.Context
 		short string
 	}
 	tests := []struct {
 		name    string
 		fields  fields
 		args    args
-		want    string
-		wantErr bool
+		want    models.OriginURL
+		wantErr assert.ErrorAssertionFunc
 	}{
 		{
-			name: "Success test",
+			name: "success test",
 			fields: fields{
-				db: []Storage{
+				db: []models.Storage{
 					{
 						UUID:          "123",
 						ShortURL:      "4rSPg8ap",
 						OriginalURL:   "http://yandex.ru",
-						CorrelationID: "2",
+						CorrelationID: "",
 						DeleteFlag:    false,
 					},
 				},
 			},
 			args: args{
+				in0:   context.Background(),
 				short: "4rSPg8ap",
 			},
-			want:    "http://yandex.ru",
-			wantErr: false,
+			want: models.OriginURL{
+				URL:     "http://yandex.ru",
+				Deleted: false,
+			},
+			wantErr: assert.NoError,
+		},
+		{
+			name: "short url not found",
+			fields: fields{
+				db: []models.Storage{
+					{
+						UUID:          "123",
+						ShortURL:      "nothing",
+						OriginalURL:   "http://bigdick",
+						CorrelationID: "",
+						DeleteFlag:    false,
+					},
+				},
+			},
+			args: args{
+				in0:   context.Background(),
+				short: "4rSPg8ap",
+			},
+			want:    models.OriginURL{},
+			wantErr: assert.Error,
 		},
 	}
 	for _, tt := range tests {
@@ -41,12 +72,9 @@ func TestMemoryRepo_GetOriginal(t *testing.T) {
 			r := &MemoryRepo{
 				db: tt.fields.db,
 			}
-			got, err := r.GetOriginal(tt.args.short)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("GetOriginal() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
+			got, err := r.GetOriginal(tt.args.in0, tt.args.short)
+			tt.wantErr(t, err)
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetOriginal() got = %v, want %v", got, tt.want)
 			}
 		})
