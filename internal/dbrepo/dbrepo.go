@@ -12,9 +12,9 @@ type DBRepo struct {
 }
 
 // New method for setup database and creating a table.
-func New(cfg config.Config) *DBRepo {
+func New(cfg config.Config) DBRepo {
 	var err error
-	var r *DBRepo
+	var r DBRepo
 
 	r.db, err = sql.Open("postgres", cfg.DatabaseDSN)
 	if err != nil {

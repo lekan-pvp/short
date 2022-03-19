@@ -13,10 +13,12 @@ type MemoryRepo struct {
 	db []models.Storage
 }
 
-func New(cfg config.Config) *MemoryRepo {
+func New(cfg config.Config) MemoryRepo {
 	var err error
-	var r *MemoryRepo
+	var r MemoryRepo
 	filePath := cfg.FileStoragePath
+	log.Println("file path: ", filePath)
+
 	f, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
 
 	defer func() {
@@ -31,7 +33,7 @@ func New(cfg config.Config) *MemoryRepo {
 	}
 
 	if _, err := f.Seek(0, 0); err != nil {
-		log.Fatalln("cant find file")
+		log.Fatal("cant find file")
 		panic(err)
 	}
 	d := json.NewDecoder(f)
@@ -41,8 +43,9 @@ func New(cfg config.Config) *MemoryRepo {
 			r.db = append(r.db, row)
 		}
 	}
+
 	if err == io.EOF {
-		return nil
+		return MemoryRepo{}
 	}
 	return r
 }

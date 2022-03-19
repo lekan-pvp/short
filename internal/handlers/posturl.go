@@ -58,6 +58,7 @@ func PostURL(repo Repo) http.HandlerFunc {
 		}
 
 		url := string(body)
+
 		short := makeshort.GenerateShortLink(url, uuid)
 
 		ctx, stop := context.WithCancel(r.Context())
