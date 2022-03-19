@@ -40,7 +40,7 @@ func GetShort(repo Repo) http.HandlerFunc {
 			return
 		}
 
-		if origin == nil {
+		if origin.URL == "" {
 			log.Println("Not found")
 			http.NotFound(w, r)
 			return

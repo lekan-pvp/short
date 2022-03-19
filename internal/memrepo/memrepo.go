@@ -45,7 +45,8 @@ func New(cfg config.Config) MemoryRepo {
 	}
 
 	if err == io.EOF {
-		return MemoryRepo{}
+		return r
 	}
+
 	return r
 }
