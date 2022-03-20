@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-func ExampleGetURLS() {
+func ExampleGetURLs() {
 	router := chi.NewRouter()
 	config.New()
 	serverAddress := config.Cfg.ServerAddress
@@ -23,7 +23,7 @@ func ExampleGetURLS() {
 	log.Fatal(http.ListenAndServe(serverAddress, router))
 }
 
-func BenchmarkGetURLS(b *testing.B) {
+func BenchmarkGetURLs(b *testing.B) {
 	r, _ := http.NewRequest("GET", "/api/user/urls", nil)
 	w := httptest.NewRecorder()
 	config.New()
