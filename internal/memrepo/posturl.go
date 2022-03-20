@@ -14,7 +14,7 @@ func (r *MemoryRepo) PostURL(_ context.Context, rec models.Storage) (string, err
 		log.Println("in posturl: ", v)
 	}
 
-	log.Println("inmem postURL")
+	log.Println("in mem postURL")
 	var err error
 	filePath := config.Cfg.FileStoragePath
 

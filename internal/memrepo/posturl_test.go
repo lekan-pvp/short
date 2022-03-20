@@ -27,9 +27,7 @@ func TestMemoryRepo_PostURL(t *testing.T) {
 		{
 			name: "success test",
 			fields: fields{
-				db: []models.Storage{
-					{},
-				},
+				db: make([]models.Storage, 0),
 			},
 			args: args{
 				in0: context.Background(),
@@ -47,7 +45,7 @@ func TestMemoryRepo_PostURL(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			config.New()
+			config.Cfg.FileStoragePath = "test.json"
 			r := &MemoryRepo{
 				db: tt.fields.db,
 			}

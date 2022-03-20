@@ -81,7 +81,8 @@ func TestMemoryRepo_GetURLsList(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			config.New()
+			config.Cfg.FileStoragePath = "test.json"
+			config.Cfg.BaseURL = "http://localhost:8080"
 			r := &MemoryRepo{
 				db: tt.fields.db,
 			}
