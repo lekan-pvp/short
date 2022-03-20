@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-func ExamplePing() {
+func ExamplePingDB() {
 	router := chi.NewRouter()
 	config.New()
 	serverAddress := config.Cfg.ServerAddress
