@@ -24,6 +24,8 @@ func base58Encoded(bytes []byte) string {
 	return string(encoded)
 }
 
+// GenerateShortLink генерирует короткий url. Для генерации используются оригиналльный url
+// и id пользователя, что обеспечивает уникальность коротких url.
 func GenerateShortLink(initialLink string, userID string) string {
 	urlHashBytes := sha256Of(initialLink + userID)
 	generatedNumber := new(big.Int).SetBytes(urlHashBytes).Uint64()

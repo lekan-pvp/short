@@ -5,6 +5,7 @@ import (
 	"github.com/lekan-pvp/short/internal/models"
 )
 
+// Repo interface which implements two types: MemoryRepo and DBRepo.
 type Repo interface {
 	PingDB(ctx context.Context) error
 	PostURL(ctx context.Context, rec models.Storage) (string, error)

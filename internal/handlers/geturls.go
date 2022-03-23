@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-// GetURLs is a handler that receives a list of Short and Original urls by user ID
+// GetURLs is a handler that receives a list of Short and Original urls by user ID.
 //
 // Endpoint: GET /api/user/urls
 //

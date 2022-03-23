@@ -7,6 +7,8 @@ import (
 	"github.com/lekan-pvp/short/internal/models"
 )
 
+// BatchShorten is a function for save an array of short urls in memory and in json file.
+// Used in PostBatch handler.
 func (r *MemoryRepo) BatchShorten(_ context.Context, uuid string, in []models.BatchRequest) ([]models.BatchResponse, error) {
 	base := config.Cfg.BaseURL
 	var res []models.BatchResponse

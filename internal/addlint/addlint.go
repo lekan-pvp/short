@@ -5,12 +5,17 @@ import (
 	"golang.org/x/tools/go/analysis"
 )
 
+// OsExitCheck - переменная типа &analysis.Analyzer для создания пользовательского
+// анализатора.
 var OsExitCheck = &analysis.Analyzer{
 	Name: "exitcheck",
 	Doc:  "interdict os.Exit",
 	Run:  run,
 }
 
+// run содержит основной код проверки. Принимает в параметре
+// указатель на структуру analysis.Pass.
+// Функция отслеживает использование os.Exit.
 func run(pass *analysis.Pass) (interface{}, error) {
 	expr := func(x *ast.ExprStmt) {
 		if call, ok := x.X.(*ast.CallExpr); ok {
