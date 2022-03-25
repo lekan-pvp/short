@@ -1,6 +1,8 @@
 package main
 
 import (
+	_ "embed"
+	"fmt"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/lekan-pvp/short/internal/config"
@@ -13,17 +15,28 @@ import (
 	"net/http"
 )
 
+//go:generate go run -ldflags "-X main.BuildVersion=v1.19.1 -X 'main.BuildDate=$(time +'%Y/%m/%d %H:%M:%S')'" main.go
+
+var (
+	BuildVersion = "N/A"
+	BuildDate    = "N/A"
+	BuildCommit  = "N/A"
+)
+
 func main() {
+	fmt.Println("Build version: ", BuildVersion)
+	fmt.Println("Build date: ", BuildDate)
+	fmt.Println("Build commit: ", BuildCommit)
 
 	config.New()
 
-	if config.Cfg.PprofEnabled {
+	if !config.Cfg.PprofEnabled {
 		pprofservoce.PprofService()
 	}
 
 	serverAddress := config.Cfg.ServerAddress
 
-	log.Println("Server address: ", serverAddress)
+	log.Println("\nServer address: ", serverAddress)
 
 	router := chi.NewRouter()
 
