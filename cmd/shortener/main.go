@@ -15,22 +15,20 @@ import (
 	"net/http"
 )
 
-//go:generate go run -ldflags "-X main.BuildVersion=v1.19.1 -X 'main.BuildDate=$(time +'%Y/%m/%d %H:%M:%S')'" main.go
-
 var (
-	BuildVersion = "N/A"
-	BuildDate    = "N/A"
-	BuildCommit  = "N/A"
+	buildVersion = "N/A"
+	buildDate    = "N/A"
+	buildCommit  = "N/A"
 )
 
 func main() {
-	fmt.Println("Build version: ", BuildVersion)
-	fmt.Println("Build date: ", BuildDate)
-	fmt.Println("Build commit: ", BuildCommit)
+	fmt.Println("Build version: ", buildVersion)
+	fmt.Println("Build date: ", buildDate)
+	fmt.Println("Build commit: ", buildCommit)
 
 	config.New()
 
-	if !config.Cfg.PprofEnabled {
+	if config.Cfg.PprofEnabled {
 		pprofservoce.PprofService()
 	}
 
