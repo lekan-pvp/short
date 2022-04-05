@@ -16,7 +16,7 @@ type Config struct {
 	FileStoragePath string `env:"FILE_STORAGE_PATH" envDefault:"storage.json" json:"file_storage_path"`
 	DatabaseDSN     string `env:"DATABASE_DSN" envDefault:"" json:"database_dsn"`
 	PprofEnabled    bool   `json:"pprof_enabled"`
-	EnableHTTPS     bool   `env:"ENABLE_HTTPS" envDefault:"true" json:"enable_https"`
+	EnableHTTPS     bool   `env:"ENABLE_HTTPS" envDefault:"false" json:"enable_https"`
 	CertFile        string `json:"cert_file"`
 	KeyFile         string `json:"key_file"`
 	Config          string `env:"CONFIG" envDefault:""`
