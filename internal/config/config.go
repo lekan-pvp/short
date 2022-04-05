@@ -19,7 +19,7 @@ type Config struct {
 	EnableHTTPS     bool   `env:"ENABLE_HTTPS" envDefault:"true" json:"enable_https"`
 	CertFile        string `json:"cert_file"`
 	KeyFile         string `json:"key_file"`
-	Config          string `env:"CONFIG" envDefault:"config.json"`
+	Config          string `env:"CONFIG" envDefault:""`
 }
 
 var Cfg Config
