@@ -13,7 +13,7 @@ import (
 
 var key = []byte("secret key")
 
-func CreateCookie() *http.Cookie {
+func New() *http.Cookie {
 
 	id := uuid.NewString()
 
@@ -46,9 +46,5 @@ func CheckCookie(cookie *http.Cookie) bool {
 	h.Write([]byte(id))
 	sign := h.Sum(nil)
 
-	if hmac.Equal(sign, data) {
-		return true
-	} else {
-		return false
-	}
+	return hmac.Equal(sign, data)
 }

@@ -13,17 +13,17 @@ func TestCreateCookie(t *testing.T) {
 	}{
 		{
 			name: "success test",
-			want: CreateCookie(),
+			want: New(),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := tt.want
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("CreateCookie() = %v, want %v", got, tt.want)
+				t.Errorf("New() = %v, want %v", got, tt.want)
 			}
 			if got.Path != tt.want.Path {
-				t.Errorf("CreateCookie() = %v, want %v", got.Path, tt.want.Path)
+				t.Errorf("New() = %v, want %v", got.Path, tt.want.Path)
 			}
 		})
 	}
@@ -40,7 +40,7 @@ func TestCheckCookie(t *testing.T) {
 	}{
 		{
 			name: "success test",
-			args: args{CreateCookie()},
+			args: args{New()},
 			want: true,
 		},
 	}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	_ "embed"
 	"fmt"
 	"github.com/go-chi/chi"
@@ -13,6 +14,10 @@ import (
 	"github.com/lekan-pvp/short/internal/pprofservoce"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 )
 
 var (
@@ -22,6 +27,8 @@ var (
 )
 
 func main() {
+	var err error
+
 	fmt.Println("Build version: ", buildVersion)
 	fmt.Println("Build date: ", buildDate)
 	fmt.Println("Build commit: ", buildCommit)
@@ -69,9 +76,44 @@ func main() {
 		router.Post("/api/shorten/batch", handlers.PostBatch(&memRepo))
 	}
 
-	err := http.ListenAndServe(serverAddress, router)
-	if err != nil {
-		log.Println("server error", err)
-		panic(err)
+	isHTTPS := config.Cfg.EnableHTTPS
+	certFile := config.Cfg.CertFile
+	keyFile := config.Cfg.KeyFile
+
+	done := make(chan os.Signal, 1)
+	signal.Notify(done, syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT)
+
+	srv := &http.Server{
+		Addr:    serverAddress,
+		Handler: router,
 	}
+
+	if isHTTPS {
+		go func() {
+			if err = srv.ListenAndServeTLS(certFile, keyFile); err != nil && err != http.ErrServerClosed {
+				log.Fatalf("listen: %s\n", err)
+			}
+		}()
+		log.Println("server started")
+	}
+
+	go func() {
+		if err = srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("listen: %s\n", err)
+		}
+	}()
+	log.Println("server started")
+
+	<-done
+	log.Println("server stopped")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer func() {
+		cancel()
+	}()
+
+	if err = srv.Shutdown(ctx); err != nil {
+		log.Fatalf("server shutdown failed: %+v", err)
+	}
+	log.Print("server exited properly")
 }

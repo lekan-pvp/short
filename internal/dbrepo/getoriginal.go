@@ -8,7 +8,7 @@ import (
 
 // GetOriginal is a method to get original url from database.
 // Used in dbhandlers.GetShort handler.
-func (r *DBRepo) GetOriginal(ctx context.Context, short string) (models.OriginURL, error) {
+func (r DBRepo) GetOriginal(ctx context.Context, short string) (models.OriginURL, error) {
 	log.Println("GetOriginal IN DB")
 	result := models.OriginURL{}
 

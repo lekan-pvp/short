@@ -28,7 +28,7 @@ func SoftDelete(repo Repo) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie("token")
 		if err != nil || !cookies.CheckCookie(cookie) {
-			cookie = cookies.CreateCookie()
+			cookie = cookies.New()
 		}
 
 		http.SetCookie(w, cookie)

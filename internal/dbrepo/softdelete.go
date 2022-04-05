@@ -37,7 +37,7 @@ func newWorker(ctx context.Context, stmt *sql.Stmt, tx *sql.Tx, jobs <-chan mode
 // SoftDelete is a method to set a DeleteFlag in database.
 // Used in dbhandlers.SoftDelete handler.
 // This in a concurrency method.
-func (r *DBRepo) SoftDelete(ctx context.Context, in []string, uuid string) error {
+func (r DBRepo) SoftDelete(ctx context.Context, in []string, uuid string) error {
 	n := len(in)
 
 	tx, err := r.db.Begin()

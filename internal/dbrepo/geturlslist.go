@@ -7,7 +7,7 @@ import (
 
 // GetURLSList is a method for receive and form response in dbhandlers.GetURLS
 // handler.
-func (r *DBRepo) GetURLsList(ctx context.Context, uuid string) ([]models.ListResponse, error) {
+func (r DBRepo) GetURLsList(ctx context.Context, uuid string) ([]models.ListResponse, error) {
 	var list []models.ListResponse
 
 	rows, err := r.db.QueryContext(ctx, `SELECT short_url, orig_url FROM users WHERE user_id=$1`, uuid)

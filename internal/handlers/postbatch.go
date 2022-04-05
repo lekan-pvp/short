@@ -45,7 +45,7 @@ func PostBatch(repo Repo) http.HandlerFunc {
 
 		cookie, err := r.Cookie("token")
 		if err != nil || !cookies.CheckCookie(cookie) {
-			cookie = cookies.CreateCookie()
+			cookie = cookies.New()
 		}
 
 		http.SetCookie(w, cookie)

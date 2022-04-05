@@ -44,7 +44,7 @@ func APIShorten(repo Repo) http.HandlerFunc {
 		// Authorization is provided by the creation cookie
 		cookie, err := r.Cookie("token")
 		if err != nil || !cookies.CheckCookie(cookie) {
-			cookie = cookies.CreateCookie()
+			cookie = cookies.New()
 		}
 
 		http.SetCookie(w, cookie)

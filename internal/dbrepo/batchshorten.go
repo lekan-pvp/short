@@ -10,7 +10,7 @@ import (
 
 // BatchShorten is a method accepting in the request body a set of URLs to shorten and returning a list of original URLs.
 // Used in dbhandlers.
-func (r *DBRepo) BatchShorten(ctx context.Context, uuid string, in []models.BatchRequest) ([]models.BatchResponse, error) {
+func (r DBRepo) BatchShorten(ctx context.Context, uuid string, in []models.BatchRequest) ([]models.BatchResponse, error) {
 	var res []models.BatchResponse
 	base := config.Cfg.BaseURL
 
