@@ -13,7 +13,7 @@ import (
 type Config struct {
 	ServerAddress   string `env:"SERVER_ADDRESS" envDefault:"localhost:8080" json:"server_address"`
 	BaseURL         string `env:"BASE_URL" envDefault:"http://localhost:8080" json:"base_url"`
-	FileStoragePath string `env:"FILE_STORAGE_PATH" envDefault:"storage.json" json:"file_storage_path"`
+	FileStoragePath string `env:"FILE_STORAGE_PATH" envDefault:"" json:"file_storage_path"`
 	DatabaseDSN     string `env:"DATABASE_DSN" envDefault:"" json:"database_dsn"`
 	PprofEnabled    bool   `json:"pprof_enabled"`
 	EnableHTTPS     bool   `env:"ENABLE_HTTPS" envDefault:"false" json:"enable_https"`
