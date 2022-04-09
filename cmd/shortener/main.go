@@ -42,10 +42,10 @@ func main() {
 	repo := storage.NewConnector(config.Cfg)
 
 	router.With(mware.Ping).Get("/ping", handlers.PingDB(repo))
-	router.Post("/", handlers.PostURL(repo))
-	router.Get("/{short}", handlers.GetShort(repo))
+	router.With(mware.RequestHandle, mware.GzipHandle).Post("/", handlers.PostURL(repo))
+	router.With(mware.GzipHandle).Get("/{short}", handlers.GetShort(repo))
 	router.Route("/api/shorten", func(r chi.Router) {
-		r.Post("/", handlers.APIShorten(repo))
+		r.With(mware.RequestHandle, mware.GzipHandle).Post("/", handlers.APIShorten(repo))
 		r.Post("/batch", handlers.PostBatch(repo))
 	})
 	router.Route("/api/user", func(r chi.Router) {
