@@ -12,7 +12,7 @@ import (
 // PostURL is a function for saving generated short url, original url, user id and delete flag
 // in memory and in json file.
 // Used in hendlers: PostURL and APIShorten.
-func (r *MemoryRepo) PostURL(_ context.Context, rec models.Storage) (string, error) {
+func (r MemoryRepo) PostURL(_ context.Context, rec models.Storage) (string, error) {
 	for _, v := range r.db {
 		log.Println("in posturl: ", v)
 	}

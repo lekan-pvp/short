@@ -10,7 +10,7 @@ import (
 // GetURLsList receives a list of Short and Original urls by user ID.
 // User must be authorized.
 // Used in GetURLs handler.
-func (r *MemoryRepo) GetURLsList(_ context.Context, uuid string) ([]models.ListResponse, error) {
+func (r MemoryRepo) GetURLsList(_ context.Context, uuid string) ([]models.ListResponse, error) {
 	base := config.Cfg.BaseURL
 	var list []models.ListResponse
 

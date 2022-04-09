@@ -3,7 +3,6 @@ package dbrepo
 import (
 	"context"
 	"database/sql"
-	"github.com/lekan-pvp/short/internal/config"
 	"log"
 )
 
@@ -12,11 +11,11 @@ type DBRepo struct {
 }
 
 // New method for setup database and creating a table.
-func New(cfg config.Config) DBRepo {
+func New(cfg string) DBRepo {
 	var err error
 	var r DBRepo
 
-	r.db, err = sql.Open("postgres", cfg.DatabaseDSN)
+	r.db, err = sql.Open("postgres", cfg)
 	if err != nil {
 		log.Printf("dtatbase connecting error %s", err)
 		log.Fatal("database connecting error", err)

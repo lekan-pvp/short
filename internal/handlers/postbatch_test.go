@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"github.com/go-chi/chi"
 	"github.com/lekan-pvp/short/internal/config"
-	"github.com/lekan-pvp/short/internal/dbrepo"
+	"github.com/lekan-pvp/short/internal/storage/dbrepo"
 	"log"
 	"net/http"
 	"net/http/httptest"

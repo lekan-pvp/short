@@ -9,7 +9,7 @@ import (
 
 // BatchShorten is a function for save an array of short urls in memory and in json file.
 // Used in PostBatch handler.
-func (r *MemoryRepo) BatchShorten(_ context.Context, uuid string, in []models.BatchRequest) ([]models.BatchResponse, error) {
+func (r MemoryRepo) BatchShorten(_ context.Context, uuid string, in []models.BatchRequest) ([]models.BatchResponse, error) {
 	base := config.Cfg.BaseURL
 	var res []models.BatchResponse
 	for _, v := range in {

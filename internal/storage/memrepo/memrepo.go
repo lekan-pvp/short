@@ -2,7 +2,6 @@ package memrepo
 
 import (
 	"encoding/json"
-	"github.com/lekan-pvp/short/internal/config"
 	"github.com/lekan-pvp/short/internal/models"
 	"io"
 	"log"
@@ -13,13 +12,12 @@ type MemoryRepo struct {
 	db []models.Storage
 }
 
-func New(cfg config.Config) MemoryRepo {
+func New(cfg string) MemoryRepo {
 	var err error
 	var r MemoryRepo
-	filePath := cfg.FileStoragePath
-	log.Println("file path: ", filePath)
+	log.Println("file path: ", cfg)
 
-	f, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
+	f, err := os.OpenFile(cfg, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
 
 	defer func() {
 		if cerr := f.Close(); cerr != nil {
