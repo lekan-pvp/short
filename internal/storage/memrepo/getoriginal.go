@@ -10,7 +10,7 @@ import (
 // GetOriginal is a function for getting original url fom memory repository or from json file
 // by short url and user id. User must be authorized.
 // Used in GetShort handler.
-func (r MemoryRepo) GetOriginal(_ context.Context, short string) (models.OriginURL, error) {
+func (r *MemoryRepo) GetOriginal(_ context.Context, short string) (models.OriginURL, error) {
 	for _, v := range r.db {
 		log.Println(v)
 	}

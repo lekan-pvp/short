@@ -11,7 +11,7 @@ type DBRepo struct {
 }
 
 // New method for setup database and creating a table.
-func New(cfg string) DBRepo {
+func New(cfg string) *DBRepo {
 	var err error
 	var r DBRepo
 
@@ -29,5 +29,5 @@ func New(cfg string) DBRepo {
 		log.Fatal("create table error", err)
 	}
 
-	return r
+	return &r
 }
