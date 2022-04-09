@@ -5,7 +5,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/lekan-pvp/short/internal/config"
 	"github.com/lekan-pvp/short/internal/makeshort"
-	"github.com/lekan-pvp/short/internal/storage"
+	"github.com/lekan-pvp/short/internal/storage/memrepo"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -18,7 +18,7 @@ func ExampleSoftDelete() {
 	router := chi.NewRouter()
 	config.New()
 	serverAddress := config.Cfg.ServerAddress
-	repo := storage.NewConnector(config.Cfg)
+	repo := memrepo.New(config.Cfg.FileStoragePath)
 	router.Delete("/urls", PostURL(repo))
 
 	log.Fatal(http.ListenAndServe(serverAddress, router))
@@ -38,7 +38,7 @@ func BenchmarkSoftDelete(b *testing.B) {
 
 	config.New()
 
-	repo := storage.NewConnector(config.Cfg)
+	repo := memrepo.New(config.Cfg.FileStoragePath)
 
 	handler := SoftDelete(repo)
 
