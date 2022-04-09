@@ -24,7 +24,7 @@ func newWorker(ctx context.Context, stmt *sql.Stmt, tx *sql.Tx, jobs <-chan mode
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 	for id := range jobs {
-		if _, err := stmt.ExecContext(ctx, id.ShortURL, id.UserID); err != nil {
+		if _, err := stmt.ExecContext(ctx, id.ShortURL); err != nil { //, id.UserID
 			if err = tx.Rollback(); err != nil {
 				return err
 			}
@@ -62,7 +62,7 @@ func (r *DBRepo) SoftDelete(ctx context.Context, in []string, uuid string) error
 
 	fanOutChs := fanOut(query, n)
 
-	stmt, err := tx.PrepareContext(ctx, `UPDATE users SET is_deleted=TRUE WHERE short_url=$1 AND user_id=$2`)
+	stmt, err := tx.PrepareContext(ctx, `UPDATE users SET is_deleted=TRUE WHERE short_url=$1`) // AND user_id=$2
 	if err != nil {
 		log.Println("stmt error")
 		return err
