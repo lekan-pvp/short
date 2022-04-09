@@ -9,7 +9,7 @@ import (
 )
 
 type MemoryRepo struct {
-	db []models.Storage
+	db []*models.Storage
 }
 
 func New(cfg string) MemoryRepo {
@@ -36,7 +36,7 @@ func New(cfg string) MemoryRepo {
 	}
 	d := json.NewDecoder(f)
 	for err == nil {
-		var row models.Storage
+		var row *models.Storage
 		if err = d.Decode(&row); err == nil {
 			r.db = append(r.db, row)
 		}
