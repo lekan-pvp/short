@@ -15,7 +15,7 @@ func (r *MemoryRepo) BatchShorten(_ context.Context, uuid string, in []models.Ba
 	for _, v := range in {
 		short := makeshort.GenerateShortLink(v.OriginalURL, v.CorrelationID)
 		res = append(res, models.BatchResponse{CorrelationID: v.CorrelationID, ShortURL: base + "/" + short})
-		r.db = append(r.db, &models.Storage{UUID: uuid, ShortURL: short, OriginalURL: v.OriginalURL, CorrelationID: v.CorrelationID, DeleteFlag: false})
+		r.db = append(r.db, models.Storage{UUID: uuid, ShortURL: short, OriginalURL: v.OriginalURL, CorrelationID: v.CorrelationID, DeleteFlag: false})
 	}
 	return res, nil
 }

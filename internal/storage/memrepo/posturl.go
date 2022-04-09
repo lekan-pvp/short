@@ -33,7 +33,7 @@ func (r *MemoryRepo) PostURL(_ context.Context, rec models.Storage) (string, err
 		return "", err
 	}
 
-	r.db = append(r.db, &rec)
+	r.db = append(r.db, rec)
 
 	log.Println(rec.ShortURL)
 
