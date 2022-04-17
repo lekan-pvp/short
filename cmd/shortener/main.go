@@ -8,7 +8,7 @@ import (
 	"github.com/lekan-pvp/short/internal/config"
 	"github.com/lekan-pvp/short/internal/handlers"
 	"github.com/lekan-pvp/short/internal/mware"
-	"github.com/lekan-pvp/short/internal/pprofservoce"
+	"github.com/lekan-pvp/short/internal/pprofservice"
 	"github.com/lekan-pvp/short/internal/server"
 	"github.com/lekan-pvp/short/internal/storage"
 	"log"
@@ -28,7 +28,7 @@ func main() {
 	config.New()
 
 	if config.Cfg.PprofEnabled {
-		pprofservoce.PprofService()
+		pprofservice.PprofService()
 	}
 
 	serverAddress := config.Cfg.ServerAddress
@@ -52,6 +52,7 @@ func main() {
 		r.Delete("/urls", handlers.SoftDelete(repo))
 		r.Get("/urls", handlers.GetURLs(repo))
 	})
+	router.Get("/api/internal/stats", handlers.Stats(repo))
 
 	server.Run(config.Cfg, router)
 }

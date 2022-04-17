@@ -13,4 +13,5 @@ type Repo interface {
 	GetURLsList(ctx context.Context, uuid string) ([]models.ListResponse, error)
 	BatchShorten(ctx context.Context, uuid string, in []models.BatchRequest) ([]models.BatchResponse, error)
 	SoftDelete(ctx context.Context, in []string, uuid string) error
+	GetStats(ctx context.Context) (models.Stat, error)
 }

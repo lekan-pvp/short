@@ -19,6 +19,7 @@ type Config struct {
 	EnableHTTPS     bool   `env:"ENABLE_HTTPS" envDefault:"false" json:"enable_https"`
 	CertFile        string `json:"cert_file"`
 	KeyFile         string `json:"key_file"`
+	TrustedSubnet   string `env:"TRUSTED_SUBNET" envDefault:"" json:"trusted_subnet"`
 	Config          string `env:"CONFIG" envDefault:""`
 }
 
@@ -34,6 +35,7 @@ func New() {
 	var pprofEnabled bool
 	var enableHTTPS bool
 	var cfg string
+	var trustedSubnet string
 
 	var once sync.Once
 	once.Do(func() {
@@ -48,6 +50,7 @@ func New() {
 		flag.BoolVar(&pprofEnabled, "p", Cfg.PprofEnabled, "Pprof is enabled")
 		flag.BoolVar(&enableHTTPS, "s", Cfg.EnableHTTPS, "To enable HTTPS server")
 		flag.StringVar(&cfg, "c", Cfg.Config, "Read current config from file linker.json")
+		flag.StringVar(&trustedSubnet, "t", Cfg.TrustedSubnet, "строковое представление бесклассовой адресации (CIDR)")
 
 		flag.Parse()
 
@@ -65,6 +68,7 @@ func New() {
 			Cfg.EnableHTTPS = enableHTTPS
 			Cfg.CertFile = "certificate.crt"
 			Cfg.KeyFile = "key.key"
+			Cfg.TrustedSubnet = trustedSubnet
 		}
 	})
 }

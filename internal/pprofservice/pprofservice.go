@@ -1,4 +1,4 @@
-package pprofservoce
+package pprofservice
 
 import (
 	"log"
