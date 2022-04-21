@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+option go_package = "github.com/lekan-pvp/short/internal/shortengrpc";
+
+package shortengrpc;
+
+service ShortenGrpc {
+  rpc GetShort(GetRequest) returns (OriginResponse) {}
+  rpc GetURLs(UUID) returns (ListResponse) {}
+  rpc PostBatch(BatchRequest) returns (BatchResponse) {}
+  rpc PostURL(PostRequest) returns (ShortResponse) {}
+  rpc SoftDelete(DelRequest) returns (DelResponse) {}
+}
+
+message URL {
+  string url = 1;
+}
+
+message Short {
+  string short = 1;
+}
+
+message GetRequest {
+  UUID id = 1;
+  Short short = 2;
+}
+
+message PostRequest {
+  UUID id = 1;
+  URL url = 2;
+}
+
+message ShortResponse {
+  Short short = 1;
+  string error = 2;
+}
+
+message OriginResponse {
+  URL url = 1;
+  bool deleted = 2;
+  string error = 3;
+}
+
+message UUID {
+  string id = 1;
+}
+
+message ListResponse {
+  repeated string short_url = 1;
+  repeated string original_url = 2;
+  string error = 3;
+}
+
+message BatchRequest {
+  string id = 1;
+  repeated string correlation_id = 2;
+  repeated string original_url = 3;
+}
+
+message BatchResponse {
+  repeated string correlation_id = 1;
+  repeated string short_url = 2;
+  string error = 3;
+}
+
+message DelRequest {
+  UUID id = 1;
+  repeated string short = 2;
+}
+
+message DelResponse {
+  string error = 1;
+}
+

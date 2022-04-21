@@ -32,7 +32,7 @@ import (
 // Possible response statuses:
 //
 // 201 Created Success status
-// 500 Internal server error
+// 500 Internal grpcserver error
 // 401 Unauthorized
 // 400 Bed Request
 // 409 Status Conflict

@@ -48,7 +48,7 @@ func New() {
 		flag.StringVar(&fileStoragePath, "f", Cfg.FileStoragePath, "file storage")
 		flag.StringVar(&baseURL, "b", Cfg.BaseURL, "Base URL")
 		flag.BoolVar(&pprofEnabled, "p", Cfg.PprofEnabled, "Pprof is enabled")
-		flag.BoolVar(&enableHTTPS, "s", Cfg.EnableHTTPS, "To enable HTTPS server")
+		flag.BoolVar(&enableHTTPS, "s", Cfg.EnableHTTPS, "To enable HTTPS grpcserver")
 		flag.StringVar(&cfg, "c", Cfg.Config, "Read current config from file linker.json")
 		flag.StringVar(&trustedSubnet, "t", Cfg.TrustedSubnet, "строковое представление бесклассовой адресации (CIDR)")
 
