@@ -3,7 +3,7 @@ package handlers
 import (
 	"github.com/go-chi/chi"
 	"github.com/lekan-pvp/short/internal/config"
-	"github.com/lekan-pvp/short/internal/dbrepo"
+	"github.com/lekan-pvp/short/internal/storage/memrepo"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -17,11 +17,8 @@ func ExampleAPIShorten() {
 	router := chi.NewRouter()
 	config.New()
 	serverAddress := config.Cfg.ServerAddress
-	dbDSN := config.Cfg.DatabaseDSN
-	if dbDSN != "" {
-		dbRepo := dbrepo.New(config.Cfg)
-		router.Post("/api/shorten", APIShorten(&dbRepo))
-	}
+	repo := memrepo.New(config.Cfg.FileStoragePath)
+	router.Post("/api/shorten", APIShorten(repo))
 	log.Fatal(http.ListenAndServe(serverAddress, router))
 }
 
@@ -32,8 +29,8 @@ func BenchmarkAPIShorten(b *testing.B) {
 		data.Set("url", "http://yandex.ru")
 		r, _ := http.NewRequest("POST", "/api/shorten", strings.NewReader(data.Encode()))
 		w := httptest.NewRecorder()
-		dbRepo := dbrepo.New(config.Cfg)
-		handler := APIShorten(&dbRepo)
+		repo := memrepo.New(config.Cfg.FileStoragePath)
+		handler := APIShorten(repo)
 
 		b.ReportAllocs()
 		b.ResetTimer()

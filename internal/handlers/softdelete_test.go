@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"github.com/go-chi/chi"
 	"github.com/lekan-pvp/short/internal/config"
-	"github.com/lekan-pvp/short/internal/dbrepo"
 	"github.com/lekan-pvp/short/internal/makeshort"
+	"github.com/lekan-pvp/short/internal/storage/memrepo"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -18,11 +18,9 @@ func ExampleSoftDelete() {
 	router := chi.NewRouter()
 	config.New()
 	serverAddress := config.Cfg.ServerAddress
-	dbDSN := config.Cfg.DatabaseDSN
-	if dbDSN != "" {
-		dbRepo := dbrepo.New(config.Cfg)
-		router.Delete("/urls", PostURL(&dbRepo))
-	}
+	repo := memrepo.New(config.Cfg.FileStoragePath)
+	router.Delete("/urls", PostURL(repo))
+
 	log.Fatal(http.ListenAndServe(serverAddress, router))
 }
 
@@ -40,9 +38,9 @@ func BenchmarkSoftDelete(b *testing.B) {
 
 	config.New()
 
-	dbRepo := dbrepo.New(config.Cfg)
+	repo := memrepo.New(config.Cfg.FileStoragePath)
 
-	handler := SoftDelete(&dbRepo)
+	handler := SoftDelete(repo)
 
 	b.ReportAllocs()
 	b.ResetTimer()

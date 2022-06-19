@@ -6,5 +6,6 @@
   "pprof_enabled": false,
   "enable_https": false,
   "cert_file": "certificate.crt",
-  "key_file": "key.key"
+  "key_file": "key.key",
+  "trusted_subnet": ""
 }
