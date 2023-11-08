@@ -3,15 +3,16 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"log"
+	"net/http"
+	"strings"
+
 	"github.com/jackc/pgerrcode"
 	"github.com/lekan-pvp/short/internal/config"
 	"github.com/lekan-pvp/short/internal/cookies"
 	"github.com/lekan-pvp/short/internal/makeshort"
 	"github.com/lekan-pvp/short/internal/models"
 	"github.com/lib/pq"
-	"log"
-	"net/http"
-	"strings"
 )
 
 // APIShorten is a handler to make short URL and save them into database.
@@ -23,9 +24,9 @@ import (
 //
 // Request body example:
 //
-//  {
-//    "url": "http://google.com"
-//  }
+//	{
+//	  "url": "http://google.com"
+//	}
 //
 // "url" is an original URL for making a short URL for one
 //

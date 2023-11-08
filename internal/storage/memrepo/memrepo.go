@@ -2,10 +2,11 @@ package memrepo
 
 import (
 	"encoding/json"
-	"github.com/lekan-pvp/short/internal/models"
 	"io"
 	"log"
 	"os"
+
+	"github.com/lekan-pvp/short/internal/models"
 )
 
 type MemoryRepo struct {
