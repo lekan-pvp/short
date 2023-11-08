@@ -2,11 +2,12 @@ package handlers
 
 import (
 	"encoding/json"
-	"github.com/lekan-pvp/short/internal/cookies"
 	"io"
 	"log"
 	"net/http"
 	"strings"
+
+	"github.com/lekan-pvp/short/internal/cookies"
 )
 
 // SoftDelete is a asynchronous handler which accepts a list of short URL identifiers to remove in the format:
@@ -67,3 +68,5 @@ func SoftDelete(repo Repo) http.HandlerFunc {
 		w.WriteHeader(http.StatusAccepted)
 	}
 }
+
+
